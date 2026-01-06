@@ -9,6 +9,10 @@ import '../../presentation/pages/auth/forgot_password_page.dart';
 import '../../presentation/pages/auth/reset_password_page.dart';
 import '../../presentation/pages/home/dashboard_page.dart';
 import '../../presentation/pages/settings/user_management_page.dart';
+import '../../presentation/pages/buildings/building_form_page.dart';
+import '../../presentation/pages/buildings/buildings_list_page.dart';
+import '../../presentation/pages/buildings/building_detail_page.dart';
+import '../../presentation/pages/buildings/building_edit_page.dart';
 
 /// Route paths
 class AppRoutes {
@@ -20,6 +24,12 @@ class AppRoutes {
   static const String resetPassword = '/auth/reset-password';
   static const String dashboard = '/dashboard';
   static const String userManagement = '/settings/users';
+
+  // Buildings routes
+  static const String buildings = '/buildings';
+  static const String buildingNew = '/buildings/new';
+  static const String buildingDetail = '/buildings/:id';
+  static const String buildingEdit = '/buildings/:id/edit';
 }
 
 /// GoRouter provider with auth redirect logic
@@ -96,6 +106,34 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const UserManagementPage(),
       ),
 
+      // Buildings routes
+      GoRoute(
+        path: AppRoutes.buildings,
+        name: 'buildings',
+        builder: (context, state) => const BuildingsListPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.buildingNew,
+        name: 'building-new',
+        builder: (context, state) => const BuildingFormPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.buildingDetail,
+        name: 'building-detail',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return BuildingDetailPage(buildingId: id);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.buildingEdit,
+        name: 'building-edit',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return BuildingEditPageWrapper(buildingId: id);
+        },
+      ),
+
       // Root redirect
       GoRoute(
         path: '/',
@@ -144,4 +182,8 @@ extension GoRouterExtension on BuildContext {
   void goToResetPassword() => go(AppRoutes.resetPassword);
   void goToDashboard() => go(AppRoutes.dashboard);
   void goToUserManagement() => go(AppRoutes.userManagement);
+
+  // Buildings navigation
+  void goToBuildings() => go(AppRoutes.buildings);
+  void goToNewBuilding() => go(AppRoutes.buildingNew);
 }

@@ -235,12 +235,7 @@ class DashboardPage extends ConsumerWidget {
         context,
         icon: Icons.add_home_work,
         label: 'Ajouter un immeuble',
-        onTap: () {
-          // TODO: Navigate to add building
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Fonctionnalite a venir')),
-          );
-        },
+        onTap: () => context.push(AppRoutes.buildingNew),
       ));
     }
 
@@ -249,12 +244,7 @@ class DashboardPage extends ConsumerWidget {
       context,
       icon: Icons.home_work,
       label: 'Voir les immeubles',
-      onTap: () {
-        // TODO: Navigate to buildings list
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Fonctionnalite a venir')),
-        );
-      },
+      onTap: () => context.push(AppRoutes.buildings),
     ));
 
     // User management (admin only)
