@@ -108,3 +108,102 @@ class PasswordStrength {
     return s;
   }
 }
+
+// ============================================================================
+// BUILDING VALIDATORS
+// ============================================================================
+
+/// Validation utilities for building forms
+class BuildingValidators {
+  BuildingValidators._();
+
+  /// Maximum lengths for building fields
+  static const int maxNameLength = 100;
+  static const int maxAddressLength = 200;
+  static const int maxCityLength = 100;
+  static const int maxPostalCodeLength = 20;
+  static const int maxNotesLength = 1000;
+
+  /// Maximum photo size in bytes (5MB before compression)
+  static const int maxPhotoSizeBytes = 5 * 1024 * 1024;
+
+  /// Validates building name
+  /// Returns null if valid, French error message if invalid
+  static String? validateName(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return "Le nom de l'immeuble est requis";
+    }
+    if (value.trim().length > maxNameLength) {
+      return 'Le nom ne peut pas dépasser $maxNameLength caractères';
+    }
+    return null;
+  }
+
+  /// Validates building address
+  /// Returns null if valid, French error message if invalid
+  static String? validateAddress(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return "L'adresse est requise";
+    }
+    if (value.trim().length > maxAddressLength) {
+      return "L'adresse ne peut pas dépasser $maxAddressLength caractères";
+    }
+    return null;
+  }
+
+  /// Validates building city
+  /// Returns null if valid, French error message if invalid
+  static String? validateCity(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'La ville est requise';
+    }
+    if (value.trim().length > maxCityLength) {
+      return 'Le nom de la ville ne peut pas dépasser $maxCityLength caractères';
+    }
+    return null;
+  }
+
+  /// Validates building postal code (optional)
+  /// Returns null if valid, French error message if invalid
+  static String? validatePostalCode(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return null; // Optional field
+    }
+    if (value.trim().length > maxPostalCodeLength) {
+      return 'Le code postal ne peut pas dépasser $maxPostalCodeLength caractères';
+    }
+    return null;
+  }
+
+  /// Validates building notes (optional)
+  /// Returns null if valid, French error message if invalid
+  static String? validateNotes(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return null; // Optional field
+    }
+    if (value.trim().length > maxNotesLength) {
+      return 'Les notes ne peuvent pas dépasser $maxNotesLength caractères';
+    }
+    return null;
+  }
+
+  /// Validates photo size before upload
+  /// Returns null if valid, French error message if invalid
+  static String? validatePhotoSize(int sizeInBytes) {
+    if (sizeInBytes > maxPhotoSizeBytes) {
+      return "L'image est trop volumineuse. Maximum 5 Mo.";
+    }
+    return null;
+  }
+
+  /// Check if all required fields are valid
+  static bool isValidBuilding({
+    required String? name,
+    required String? address,
+    required String? city,
+  }) {
+    return validateName(name) == null &&
+        validateAddress(address) == null &&
+        validateCity(city) == null;
+  }
+}
