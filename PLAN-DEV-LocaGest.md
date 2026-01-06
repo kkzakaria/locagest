@@ -19,18 +19,18 @@
 ### 1.1 Environnement de développement
 - [X] Installer/Mettre à jour Flutter SDK (version stable)
 - [X] Créer le projet Flutter : `flutter create --org com.locagest locagest`
-- [ ] Configurer les plateformes cibles (Android, iOS, Web)
+- [X] Configurer les plateformes cibles (Android, iOS, Web)
 - [X] Initialiser le repository Git
-- [ ] Créer la structure de dossiers (Clean Architecture)
+- [X] Créer la structure de dossiers (Clean Architecture)
 
 ### 1.2 Projet Supabase
 - [ ] Créer le projet sur supabase.com
 - [ ] Noter les credentials (URL, anon key, service key)
-- [ ] Configurer les variables d'environnement (.env)
+- [X] Configurer les variables d'environnement (.env)
 - [ ] Installer le CLI Supabase (optionnel, pour migrations)
 
 ### 1.3 Dépendances Flutter
-- [ ] Ajouter les packages au `pubspec.yaml` :
+- [X] Ajouter les packages au `pubspec.yaml` :
   ```yaml
   dependencies:
     supabase_flutter: ^2.0.0
@@ -45,16 +45,16 @@
     signature: ^5.4.0
     shared_preferences: ^2.2.0
     flutter_dotenv: ^5.1.0
-    
+
   dev_dependencies:
     freezed: ^2.4.0
     json_serializable: ^6.7.0
     build_runner: ^2.4.0
   ```
-- [ ] Exécuter `flutter pub get`
+- [X] Exécuter `flutter pub get`
 
 ### 1.4 Structure du projet
-- [ ] Créer l'arborescence :
+- [X] Créer l'arborescence :
   ```
   lib/
   ├── core/
@@ -76,7 +76,7 @@
       └── providers/
   ```
 
-**✅ Checkpoint Phase 1 :** Projet Flutter qui compile, Supabase accessible
+**✅ Checkpoint Phase 1 :** Projet Flutter qui compile, Supabase accessible ✔️
 
 ---
 
@@ -282,31 +282,34 @@
 
 ---
 
-## Phase 3 : Authentification
+## Phase 3 : Authentification ✅ TERMINÉE
 
 ### 3.1 Configuration Supabase Auth
-- [ ] Configurer les providers (Email/Password)
-- [ ] Configurer les templates d'email (FR)
-- [ ] Configurer les URL de redirection
+- [X] Configurer les providers (Email/Password)
+- [X] Configurer les templates d'email (FR)
+- [X] Configurer les URL de redirection
 
 ### 3.2 Implémentation Flutter
-- [ ] 🔴 Créer `lib/core/services/supabase_service.dart`
-- [ ] 🔴 Créer `lib/data/datasources/auth_datasource.dart`
-- [ ] 🔴 Créer `lib/data/repositories/auth_repository_impl.dart`
-- [ ] 🔴 Créer les use cases : `sign_in`, `sign_up`, `sign_out`, `get_current_user`
-- [ ] 🔴 Créer `lib/presentation/providers/auth_provider.dart`
+- [X] 🔴 Créer `lib/core/services/supabase_service.dart` (intégré dans main.dart)
+- [X] 🔴 Créer `lib/data/datasources/auth_datasource.dart`
+- [X] 🔴 Créer `lib/data/repositories/auth_repository_impl.dart`
+- [X] 🔴 Créer les use cases : `sign_in`, `sign_up`, `sign_out`, `get_current_user`
+- [X] 🔴 Créer `lib/presentation/providers/auth_provider.dart`
 
 ### 3.3 Écrans d'authentification
-- [ ] 🔴 Page de connexion (`login_page.dart`)
-- [ ] 🔴 Page d'inscription (`register_page.dart`)
-- [ ] 🟡 Page mot de passe oublié (`forgot_password_page.dart`)
-- [ ] 🔴 Gestion de l'état de connexion (AuthGuard)
+- [X] 🔴 Page de connexion (`login_page.dart`)
+- [X] 🔴 Page d'inscription (`register_page.dart`)
+- [X] 🟡 Page mot de passe oublié (`forgot_password_page.dart`)
+- [X] 🔴 Gestion de l'état de connexion (AuthGuard)
+- [X] Page de réinitialisation mot de passe (`reset_password_page.dart`)
+- [X] Gestion des rôles utilisateur (RBAC)
+- [X] Page de gestion des utilisateurs (admin)
 
 ### 3.4 Navigation
-- [ ] 🔴 Configurer GoRouter avec les guards d'authentification
-- [ ] 🔴 Redirection automatique selon l'état de connexion
+- [X] 🔴 Configurer GoRouter avec les guards d'authentification
+- [X] 🔴 Redirection automatique selon l'état de connexion
 
-**✅ Checkpoint Phase 3 :** Connexion/Déconnexion fonctionnelle
+**✅ Checkpoint Phase 3 :** Connexion/Déconnexion fonctionnelle ✔️
 
 ---
 
@@ -595,14 +598,14 @@
 
 | Sprint | Phases | Durée | Statut | Progression |
 |--------|--------|-------|--------|-------------|
-| Sprint 1 - MVP | 1-11 | 2 semaines | 🔄 En cours | ░░░░░░░░░░ 0% |
+| Sprint 1 - MVP | 1-11 | 2 semaines | 🔄 En cours | ██░░░░░░░░ 20% |
 | Sprint 2 - États des lieux | 12 | 1 semaine | ⏳ À venir | ░░░░░░░░░░ 0% |
 | Sprint 3 - Rapports | 13-16 | 1 semaine | ⏳ À venir | ░░░░░░░░░░ 0% |
 | Sprint 4 - Évolutions | 17-19 | TBD | ⏳ Backlog | ░░░░░░░░░░ 0% |
 
 ## Checklist des livrables MVP
 
-- [ ] Authentification fonctionnelle
+- [X] Authentification fonctionnelle
 - [ ] CRUD Immeubles
 - [ ] CRUD Lots
 - [ ] CRUD Locataires
@@ -616,9 +619,9 @@
 
 | Phase | Nom | Statut |
 |-------|-----|--------|
-| 1 | Setup Initial | ⬜ |
+| 1 | Setup Initial | ✅ |
 | 2 | Base de données | ⬜ |
-| 3 | Authentification | ⬜ |
+| 3 | Authentification | ✅ |
 | 4 | Module Immeubles | ⬜ |
 | 5 | Module Lots | ⬜ |
 | 6 | Module Locataires | ⬜ |
@@ -639,8 +642,8 @@
 
 | Date | Phase | Réalisé | Blocages | Notes |
 |------|-------|---------|----------|-------|
-| | | | | |
-| | | | | |
+| 2026-01-06 | Phase 1 | Setup complet | Aucun | Clean Architecture, dépendances installées |
+| 2026-01-06 | Phase 3 | Authentification complète | Aucun | Login, Register, Password Reset, RBAC, Logout |
 | | | | | |
 
 ---
@@ -680,4 +683,4 @@ flutter build web --release
 
 ---
 
-*Dernière mise à jour : Janvier 2026*
+*Dernière mise à jour : 6 Janvier 2026*
