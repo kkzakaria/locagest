@@ -38,6 +38,9 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
           email: _emailController.text.trim(),
         );
 
+    // Check if widget is still mounted before using ref/setState
+    if (!mounted) return;
+
     // Check if request was successful (no error)
     final error = ref.read(authProvider).value?.error;
     if (error == null) {

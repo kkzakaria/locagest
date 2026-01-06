@@ -41,48 +41,68 @@ CREATE TRIGGER set_profiles_updated_at
   EXECUTE FUNCTION update_updated_at_column();
 
 -- ============================================================================
+-- HELPER FUNCTION TO CHECK ADMIN STATUS (bypasses RLS)
+-- ============================================================================
+
+-- This function is used by RLS policies to avoid infinite recursion
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS boolean AS $$
+DECLARE
+  user_role text;
+BEGIN
+  SELECT role INTO user_role
+  FROM profiles
+  WHERE id = auth.uid();
+
+  RETURN user_role = 'admin';
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER STABLE;
+
+-- Get current user's role (bypasses RLS)
+CREATE OR REPLACE FUNCTION public.get_my_role()
+RETURNS text AS $$
+DECLARE
+  user_role text;
+BEGIN
+  SELECT role INTO user_role
+  FROM profiles
+  WHERE id = auth.uid();
+
+  RETURN user_role;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER STABLE;
+
+-- ============================================================================
 -- ROW LEVEL SECURITY (RLS) POLICIES
 -- ============================================================================
 
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 
--- Users can read their own profile
+-- Users can read their own profile OR admins can read all
 DROP POLICY IF EXISTS "Users can view own profile" ON profiles;
-CREATE POLICY "Users can view own profile"
-ON profiles FOR SELECT
-USING (auth.uid() = id);
-
--- Admins can read all profiles
 DROP POLICY IF EXISTS "Admins can view all profiles" ON profiles;
-CREATE POLICY "Admins can view all profiles"
+CREATE POLICY "Users can view profiles"
 ON profiles FOR SELECT
 USING (
-  EXISTS (
-    SELECT 1 FROM profiles
-    WHERE id = auth.uid() AND role = 'admin'
-  )
+  auth.uid() = id
+  OR public.is_admin()
 );
 
--- Users can update their own profile (except role)
+-- Users can update their own profile (but not their role)
 DROP POLICY IF EXISTS "Users can update own profile" ON profiles;
 CREATE POLICY "Users can update own profile"
 ON profiles FOR UPDATE
 USING (auth.uid() = id)
 WITH CHECK (
   auth.uid() = id
-  AND role = (SELECT role FROM profiles WHERE id = auth.uid())
+  AND role = public.get_my_role()
 );
 
 -- Admins can update any profile (including role)
 DROP POLICY IF EXISTS "Admins can update any profile" ON profiles;
 CREATE POLICY "Admins can update any profile"
 ON profiles FOR UPDATE
-USING (
-  EXISTS (
-    SELECT 1 FROM profiles
-    WHERE id = auth.uid() AND role = 'admin'
-  )
-);
+USING (public.is_admin());
 
 -- Profiles are auto-created via trigger, but allow system inserts
 DROP POLICY IF EXISTS "System can insert profiles" ON profiles;
