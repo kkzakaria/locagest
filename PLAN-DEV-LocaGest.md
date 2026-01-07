@@ -313,25 +313,34 @@
 
 ---
 
-## Phase 4 : Module Immeubles
+## Phase 4 : Module Immeubles ✅ TERMINÉE
 
 ### 4.1 Data Layer
-- [ ] 🔴 Créer `BuildingModel` avec freezed
-- [ ] 🔴 Créer `BuildingDatasource` (CRUD Supabase)
-- [ ] 🔴 Créer `BuildingRepository` implementation
+- [X] 🔴 Créer `BuildingModel` avec freezed
+- [X] 🔴 Créer `BuildingDatasource` (CRUD Supabase)
+- [X] 🔴 Créer `BuildingRepository` implementation
 
 ### 4.2 Domain Layer
-- [ ] 🔴 Créer `Building` entity
-- [ ] 🔴 Créer les use cases CRUD
+- [X] 🔴 Créer `Building` entity
+- [X] 🔴 Créer les use cases CRUD
 
 ### 4.3 Presentation Layer
-- [ ] 🔴 Créer `BuildingsProvider` (Riverpod)
-- [ ] 🔴 Page liste des immeubles (`buildings_list_page.dart`)
-- [ ] 🔴 Page détail immeuble (`building_detail_page.dart`)
-- [ ] 🔴 Formulaire immeuble (`building_form_page.dart`)
-- [ ] 🟡 Widget `BuildingCard`
+- [X] 🔴 Créer `BuildingsProvider` (Riverpod)
+- [X] 🔴 Page liste des immeubles (`buildings_list_page.dart`)
+- [X] 🔴 Page détail immeuble (`building_detail_page.dart`)
+- [X] 🔴 Formulaire immeuble (`building_form_page.dart`)
+- [X] 🟡 Widget `BuildingCard`
 
-**✅ Checkpoint Phase 4 :** CRUD Immeubles complet
+### 4.4 Fonctionnalités supplémentaires implémentées
+- [X] Upload et compression de photos
+- [X] Pagination et lazy loading
+- [X] Contrôle d'accès basé sur les rôles (RBAC)
+- [X] Dialogue de confirmation de suppression
+- [X] Messages d'erreur en français
+- [X] Formatage des dates (DD/MM/YYYY)
+- [X] Migration SQL avec RLS policies
+
+**✅ Checkpoint Phase 4 :** CRUD Immeubles complet ✔️
 
 ---
 
@@ -598,7 +607,7 @@
 
 | Sprint | Phases | Durée | Statut | Progression |
 |--------|--------|-------|--------|-------------|
-| Sprint 1 - MVP | 1-11 | 2 semaines | 🔄 En cours | ██░░░░░░░░ 20% |
+| Sprint 1 - MVP | 1-11 | 2 semaines | 🔄 En cours | ████░░░░░░ 36% |
 | Sprint 2 - États des lieux | 12 | 1 semaine | ⏳ À venir | ░░░░░░░░░░ 0% |
 | Sprint 3 - Rapports | 13-16 | 1 semaine | ⏳ À venir | ░░░░░░░░░░ 0% |
 | Sprint 4 - Évolutions | 17-19 | TBD | ⏳ Backlog | ░░░░░░░░░░ 0% |
@@ -606,7 +615,7 @@
 ## Checklist des livrables MVP
 
 - [X] Authentification fonctionnelle
-- [ ] CRUD Immeubles
+- [X] CRUD Immeubles
 - [ ] CRUD Lots
 - [ ] CRUD Locataires
 - [ ] CRUD Baux avec génération échéances
@@ -620,9 +629,9 @@
 | Phase | Nom | Statut |
 |-------|-----|--------|
 | 1 | Setup Initial | ✅ |
-| 2 | Base de données | ⬜ |
+| 2 | Base de données | 🔄 (buildings done) |
 | 3 | Authentification | ✅ |
-| 4 | Module Immeubles | ⬜ |
+| 4 | Module Immeubles | ✅ |
 | 5 | Module Lots | ⬜ |
 | 6 | Module Locataires | ⬜ |
 | 7 | Module Baux | ⬜ |
@@ -644,6 +653,7 @@
 |------|-------|---------|----------|-------|
 | 2026-01-06 | Phase 1 | Setup complet | Aucun | Clean Architecture, dépendances installées |
 | 2026-01-06 | Phase 3 | Authentification complète | Aucun | Login, Register, Password Reset, RBAC, Logout |
+| 2026-01-07 | Phase 4 | Module Immeubles complet | Bug LocaleDataException corrigé | CRUD complet, 44 tâches, migration SQL, RLS, tests Playwright |
 | | | | | |
 
 ---
@@ -683,4 +693,4 @@ flutter build web --release
 
 ---
 
-*Dernière mise à jour : 6 Janvier 2026*
+*Dernière mise à jour : 7 Janvier 2026*
