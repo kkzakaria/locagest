@@ -7,6 +7,7 @@ import '../../../core/router/app_router.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../domain/entities/building.dart';
 import '../../providers/buildings_provider.dart';
+import '../../widgets/units/units_list_section.dart';
 
 /// Page displaying detailed information about a building
 class BuildingDetailPage extends ConsumerWidget {
@@ -74,13 +75,12 @@ class BuildingDetailPage extends ConsumerWidget {
               const SizedBox(height: 16),
 
               // Units section
-              _buildSection(
-                context,
-                title: 'Lots',
-                icon: Icons.door_front_door,
-                children: [
-                  _buildUnitsSummary(context, building),
-                ],
+              UnitsListSection(
+                buildingId: building.id,
+                canManage: canManage.maybeWhen(
+                  data: (value) => value,
+                  orElse: () => false,
+                ),
               ),
 
               const SizedBox(height: 16),
@@ -263,43 +263,6 @@ class BuildingDetailPage extends ConsumerWidget {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildUnitsSummary(BuildContext context, Building building) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              building.totalUnits == 0
-                  ? 'Aucun lot enregistre'
-                  : building.totalUnits == 1
-                      ? '1 lot enregistre'
-                      : '${building.totalUnits} lots enregistres',
-              style: TextStyle(
-                color: Colors.grey[700],
-                fontSize: 14,
-              ),
-            ),
-            TextButton.icon(
-              onPressed: () {
-                // TODO: Navigate to units list for this building
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Gestion des lots - A venir'),
-                    duration: Duration(seconds: 1),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.arrow_forward, size: 16),
-              label: const Text('Voir les lots'),
-            ),
-          ],
-        ),
-      ],
     );
   }
 

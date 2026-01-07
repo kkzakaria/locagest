@@ -13,6 +13,9 @@ import '../../presentation/pages/buildings/building_form_page.dart';
 import '../../presentation/pages/buildings/buildings_list_page.dart';
 import '../../presentation/pages/buildings/building_detail_page.dart';
 import '../../presentation/pages/buildings/building_edit_page.dart';
+import '../../presentation/pages/units/unit_form_page.dart';
+import '../../presentation/pages/units/unit_detail_page.dart';
+import '../../presentation/pages/units/unit_edit_page.dart';
 
 /// Route paths
 class AppRoutes {
@@ -30,6 +33,11 @@ class AppRoutes {
   static const String buildingNew = '/buildings/new';
   static const String buildingDetail = '/buildings/:id';
   static const String buildingEdit = '/buildings/:id/edit';
+
+  // Units routes
+  static const String unitNew = '/buildings/:buildingId/units/create';
+  static const String unitDetail = '/buildings/:buildingId/units/:unitId';
+  static const String unitEdit = '/buildings/:buildingId/units/:unitId/edit';
 }
 
 /// GoRouter provider with auth redirect logic
@@ -131,6 +139,34 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final id = state.pathParameters['id']!;
           return BuildingEditPageWrapper(buildingId: id);
+        },
+      ),
+
+      // Units routes
+      GoRoute(
+        path: AppRoutes.unitNew,
+        name: 'unit-new',
+        builder: (context, state) {
+          final buildingId = state.pathParameters['buildingId']!;
+          return UnitFormPage(buildingId: buildingId);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.unitDetail,
+        name: 'unit-detail',
+        builder: (context, state) {
+          final buildingId = state.pathParameters['buildingId']!;
+          final unitId = state.pathParameters['unitId']!;
+          return UnitDetailPage(buildingId: buildingId, unitId: unitId);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.unitEdit,
+        name: 'unit-edit',
+        builder: (context, state) {
+          final buildingId = state.pathParameters['buildingId']!;
+          final unitId = state.pathParameters['unitId']!;
+          return UnitEditPage(buildingId: buildingId, unitId: unitId);
         },
       ),
 

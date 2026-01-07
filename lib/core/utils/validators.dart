@@ -207,3 +207,159 @@ class BuildingValidators {
         validateCity(city) == null;
   }
 }
+
+// ============================================================================
+// UNIT VALIDATORS
+// ============================================================================
+
+/// Validation utilities for unit forms
+class UnitValidators {
+  UnitValidators._();
+
+  /// Maximum lengths for unit fields
+  static const int maxReferenceLength = 50;
+  static const int maxDescriptionLength = 2000;
+
+  /// Maximum photo size in bytes (5MB before compression)
+  static const int maxPhotoSizeBytes = 5 * 1024 * 1024;
+
+  /// Validates unit reference
+  /// Returns null if valid, French error message if invalid
+  static String? validateReference(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'La référence est requise';
+    }
+    if (value.trim().length > maxReferenceLength) {
+      return 'La référence ne doit pas dépasser $maxReferenceLength caractères';
+    }
+    return null;
+  }
+
+  /// Validates base rent (required, must be positive)
+  /// Returns null if valid, French error message if invalid
+  static String? validateBaseRent(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Le loyer de base est requis';
+    }
+    // Remove spaces for parsing (French thousand separator)
+    final cleanValue = value.replaceAll(' ', '').replaceAll(',', '.');
+    final rent = double.tryParse(cleanValue);
+    if (rent == null) {
+      return 'Le loyer doit être un nombre valide';
+    }
+    if (rent <= 0) {
+      return 'Le loyer doit être un nombre positif';
+    }
+    return null;
+  }
+
+  /// Validates surface area (optional, must be positive if provided)
+  /// Returns null if valid, French error message if invalid
+  static String? validateSurfaceArea(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return null; // Optional field
+    }
+    final cleanValue = value.replaceAll(' ', '').replaceAll(',', '.');
+    final area = double.tryParse(cleanValue);
+    if (area == null) {
+      return 'La surface doit être un nombre valide';
+    }
+    if (area <= 0) {
+      return 'La surface doit être un nombre positif';
+    }
+    return null;
+  }
+
+  /// Validates rooms count (optional, must be non-negative if provided)
+  /// Returns null if valid, French error message if invalid
+  static String? validateRoomsCount(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return null; // Optional field
+    }
+    final rooms = int.tryParse(value.trim());
+    if (rooms == null) {
+      return 'Le nombre de pièces doit être un nombre entier';
+    }
+    if (rooms < 0) {
+      return 'Le nombre de pièces doit être positif ou zéro';
+    }
+    return null;
+  }
+
+  /// Validates charges amount (optional, must be non-negative if provided)
+  /// Returns null if valid, French error message if invalid
+  static String? validateChargesAmount(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return null; // Optional field, defaults to 0
+    }
+    final cleanValue = value.replaceAll(' ', '').replaceAll(',', '.');
+    final charges = double.tryParse(cleanValue);
+    if (charges == null) {
+      return 'Les charges doivent être un nombre valide';
+    }
+    if (charges < 0) {
+      return 'Les charges doivent être un nombre positif ou zéro';
+    }
+    return null;
+  }
+
+  /// Validates floor number (optional, can be negative for basement)
+  /// Returns null if valid, French error message if invalid
+  static String? validateFloor(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return null; // Optional field
+    }
+    final floor = int.tryParse(value.trim());
+    if (floor == null) {
+      return "L'étage doit être un nombre entier";
+    }
+    return null;
+  }
+
+  /// Validates description (optional, max length)
+  /// Returns null if valid, French error message if invalid
+  static String? validateDescription(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return null; // Optional field
+    }
+    if (value.trim().length > maxDescriptionLength) {
+      return 'La description ne peut pas dépasser $maxDescriptionLength caractères';
+    }
+    return null;
+  }
+
+  /// Validates photo size before upload
+  /// Returns null if valid, French error message if invalid
+  static String? validatePhotoSize(int sizeInBytes) {
+    if (sizeInBytes > maxPhotoSizeBytes) {
+      return 'La photo est trop volumineuse (max 5 Mo)';
+    }
+    return null;
+  }
+
+  /// Check if all required fields are valid
+  static bool isValidUnit({
+    required String? reference,
+    required String? baseRent,
+  }) {
+    return validateReference(reference) == null &&
+        validateBaseRent(baseRent) == null;
+  }
+
+  /// Parse currency string to double (handles French format with spaces)
+  static double? parseAmount(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return null;
+    }
+    final cleanValue = value.replaceAll(' ', '').replaceAll(',', '.');
+    return double.tryParse(cleanValue);
+  }
+
+  /// Parse integer string
+  static int? parseInt(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return null;
+    }
+    return int.tryParse(value.trim());
+  }
+}

@@ -103,6 +103,8 @@ All tables use Row Level Security (RLS) with policies based on user roles.
 - Supabase (PostgreSQL with RLS) via Supabase Auth (001-user-auth)
 - Dart 3.x (Flutter SDK stable) + flutter_riverpod, go_router, freezed, supabase_flutter, image_picker (002-building-management)
 - Supabase PostgreSQL (buildings table) + Supabase Storage (photos bucket) (002-building-management)
+- Dart 3.x (Flutter SDK stable) + flutter_riverpod 2.4.x, go_router 13.x, freezed 2.4.x, supabase_flutter 2.x, image_picker 1.x (003-unit-management)
+- Supabase PostgreSQL (units table) + Supabase Storage (photos bucket) (003-unit-management)
 
 ## Recent Changes
 - 001-user-auth: Added Dart 3.x (Flutter SDK stable) + supabase_flutter, flutter_riverpod, go_router, freezed, flutter_secure_storage

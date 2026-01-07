@@ -344,25 +344,36 @@
 
 ---
 
-## Phase 5 : Module Lots/Unités
+## Phase 5 : Module Lots/Unités ✅ TERMINÉE
 
 ### 5.1 Data Layer
-- [ ] 🔴 Créer `UnitModel` avec freezed
-- [ ] 🔴 Créer `UnitDatasource`
-- [ ] 🔴 Créer `UnitRepository` implementation
+- [X] 🔴 Créer `UnitModel` avec freezed
+- [X] 🔴 Créer `UnitDatasource`
+- [X] 🔴 Créer `UnitRepository` implementation
 
 ### 5.2 Domain Layer
-- [ ] 🔴 Créer `Unit` entity
-- [ ] 🔴 Créer les use cases CRUD
+- [X] 🔴 Créer `Unit` entity
+- [X] 🔴 Créer les use cases CRUD
 
 ### 5.3 Presentation Layer
-- [ ] 🔴 Créer `UnitsProvider`
-- [ ] 🔴 Liste des lots (intégrée dans building_detail)
-- [ ] 🔴 Page détail lot (`unit_detail_page.dart`)
-- [ ] 🔴 Formulaire lot (`unit_form_page.dart`)
-- [ ] 🟡 Widget `UnitCard` avec badge statut
+- [X] 🔴 Créer `UnitsProvider`
+- [X] 🔴 Liste des lots (intégrée dans building_detail)
+- [X] 🔴 Page détail lot (`unit_detail_page.dart`)
+- [X] 🔴 Formulaire lot (`unit_form_page.dart`)
+- [X] 🟡 Widget `UnitCard` avec badge statut
 
-**✅ Checkpoint Phase 5 :** CRUD Lots complet, liaison avec immeubles
+### 5.4 Fonctionnalités supplémentaires implémentées
+- [X] Migration SQL avec RLS policies et triggers
+- [X] Gestion des équipements (EquipmentListEditor)
+- [X] Gestion des photos (UnitPhotosManager)
+- [X] Badge statut coloré (vacant=rouge, occupied=vert, maintenance=orange)
+- [X] Formatage FCFA (165 000 FCFA/mois)
+- [X] Affichage étage (RDC, Sous-sol, Étage X)
+- [X] Contrôle d'accès basé sur les rôles (RBAC)
+- [X] Messages d'erreur en français
+- [X] Tests Playwright validés
+
+**✅ Checkpoint Phase 5 :** CRUD Lots complet, liaison avec immeubles ✔️
 
 ---
 
@@ -607,7 +618,7 @@
 
 | Sprint | Phases | Durée | Statut | Progression |
 |--------|--------|-------|--------|-------------|
-| Sprint 1 - MVP | 1-11 | 2 semaines | 🔄 En cours | ████░░░░░░ 36% |
+| Sprint 1 - MVP | 1-11 | 2 semaines | 🔄 En cours | █████░░░░░ 45% |
 | Sprint 2 - États des lieux | 12 | 1 semaine | ⏳ À venir | ░░░░░░░░░░ 0% |
 | Sprint 3 - Rapports | 13-16 | 1 semaine | ⏳ À venir | ░░░░░░░░░░ 0% |
 | Sprint 4 - Évolutions | 17-19 | TBD | ⏳ Backlog | ░░░░░░░░░░ 0% |
@@ -616,7 +627,7 @@
 
 - [X] Authentification fonctionnelle
 - [X] CRUD Immeubles
-- [ ] CRUD Lots
+- [X] CRUD Lots
 - [ ] CRUD Locataires
 - [ ] CRUD Baux avec génération échéances
 - [ ] Enregistrement paiements
@@ -629,10 +640,10 @@
 | Phase | Nom | Statut |
 |-------|-----|--------|
 | 1 | Setup Initial | ✅ |
-| 2 | Base de données | 🔄 (buildings done) |
+| 2 | Base de données | 🔄 (buildings, units done) |
 | 3 | Authentification | ✅ |
 | 4 | Module Immeubles | ✅ |
-| 5 | Module Lots | ⬜ |
+| 5 | Module Lots | ✅ |
 | 6 | Module Locataires | ⬜ |
 | 7 | Module Baux | ⬜ |
 | 8 | Paiements | ⬜ |
@@ -654,6 +665,7 @@
 | 2026-01-06 | Phase 1 | Setup complet | Aucun | Clean Architecture, dépendances installées |
 | 2026-01-06 | Phase 3 | Authentification complète | Aucun | Login, Register, Password Reset, RBAC, Logout |
 | 2026-01-07 | Phase 4 | Module Immeubles complet | Bug LocaleDataException corrigé | CRUD complet, 44 tâches, migration SQL, RLS, tests Playwright |
+| 2026-01-07 | Phase 5 | Module Lots complet | Aucun | 73 tâches, CRUD complet, équipements, photos, migration SQL, RLS, tests Playwright |
 | | | | | |
 
 ---
