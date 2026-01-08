@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../domain/entities/unit.dart';
+import 'building_model.dart';
 
 part 'unit_model.freezed.dart';
 part 'unit_model.g.dart';
@@ -26,6 +27,8 @@ class UnitModel with _$UnitModel {
     @Default([]) List<String> photos,
     @JsonKey(name: 'created_at') required DateTime createdAt,
     @JsonKey(name: 'updated_at') required DateTime updatedAt,
+    // Joined data (from nested queries)
+    BuildingModel? building,
   }) = _UnitModel;
 
   factory UnitModel.fromJson(Map<String, dynamic> json) =>
@@ -49,6 +52,7 @@ class UnitModel with _$UnitModel {
         photos: photos,
         createdAt: createdAt,
         updatedAt: updatedAt,
+        buildingName: building?.name,
       );
 
   /// Parse type string to enum

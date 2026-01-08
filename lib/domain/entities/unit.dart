@@ -67,6 +67,9 @@ class Unit {
   final DateTime createdAt;
   final DateTime updatedAt;
 
+  // Joined data (populated when loaded with building info)
+  final String? buildingName;
+
   const Unit({
     required this.id,
     required this.buildingId,
@@ -84,6 +87,7 @@ class Unit {
     this.photos = const [],
     required this.createdAt,
     required this.updatedAt,
+    this.buildingName,
   });
 
   // ============================================================================
@@ -159,6 +163,7 @@ class Unit {
     List<String>? photos,
     DateTime? createdAt,
     DateTime? updatedAt,
+    String? buildingName,
   }) {
     return Unit(
       id: id ?? this.id,
@@ -177,6 +182,7 @@ class Unit {
       photos: photos ?? this.photos,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      buildingName: buildingName ?? this.buildingName,
     );
   }
 

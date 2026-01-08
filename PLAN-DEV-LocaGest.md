@@ -412,28 +412,43 @@
 
 ---
 
-## Phase 7 : Module Baux
+## Phase 7 : Module Baux ✅ TERMINÉE
 
 ### 7.1 Data Layer
-- [ ] 🔴 Créer `LeaseModel`
-- [ ] 🔴 Créer `LeaseDatasource`
-- [ ] 🔴 Créer `LeaseRepository`
+- [X] 🔴 Créer `LeaseModel`
+- [X] 🔴 Créer `LeaseDatasource`
+- [X] 🔴 Créer `LeaseRepository`
 
 ### 7.2 Domain Layer
-- [ ] 🔴 Créer `Lease` entity
-- [ ] 🔴 Use cases : CRUD + `TerminateLease`
+- [X] 🔴 Créer `Lease` entity
+- [X] 🔴 Créer `RentSchedule` entity
+- [X] 🔴 Use cases : CRUD + `TerminateLease`
 
 ### 7.3 Presentation Layer
-- [ ] 🔴 Créer `LeasesProvider`
-- [ ] 🔴 Formulaire bail (`lease_form_page.dart`)
-- [ ] 🔴 Affichage bail dans détail lot et locataire
-- [ ] 🟡 Modal résiliation
+- [X] 🔴 Créer `LeasesProvider`
+- [X] 🔴 Page liste des baux (`leases_list_page.dart`)
+- [X] 🔴 Page détail bail (`lease_detail_page.dart`)
+- [X] 🔴 Formulaire bail (`lease_form_page.dart`)
+- [X] 🔴 Page édition bail (`lease_edit_page.dart`)
+- [X] 🟡 Section échéances dans détail bail
 
 ### 7.4 Logique métier
-- [ ] 🔴 Mise à jour statut lot à la création/résiliation
-- [ ] 🔴 Génération automatique des échéances
+- [X] 🔴 Mise à jour statut lot à la création/résiliation
+- [X] 🔴 Génération automatique des échéances (rent_schedules)
+- [X] 🔴 Validation bail existant pour même lot
+- [X] 🔴 Calcul durée automatique
 
-**✅ Checkpoint Phase 7 :** Baux fonctionnels, liaison lot-locataire
+### 7.5 Fonctionnalités supplémentaires implémentées
+- [X] Migration SQL avec RLS policies (005_leases.sql)
+- [X] Sélection en deux étapes (Immeuble → Lot)
+- [X] DatePicker avec localisation française
+- [X] Affichage résumé échéances (payées, en attente, en retard)
+- [X] Badge statut coloré (actif=vert, pending=orange, terminated=rouge)
+- [X] Formatage FCFA et dates françaises
+- [X] Contrôle d'accès basé sur les rôles (RBAC)
+- [X] Tests Playwright validés
+
+**✅ Checkpoint Phase 7 :** Baux fonctionnels, liaison lot-locataire ✔️
 
 ---
 
@@ -631,7 +646,7 @@
 
 | Sprint | Phases | Durée | Statut | Progression |
 |--------|--------|-------|--------|-------------|
-| Sprint 1 - MVP | 1-11 | 2 semaines | 🔄 En cours | ██████░░░░ 55% |
+| Sprint 1 - MVP | 1-11 | 2 semaines | 🔄 En cours | ███████░░░ 65% |
 | Sprint 2 - États des lieux | 12 | 1 semaine | ⏳ À venir | ░░░░░░░░░░ 0% |
 | Sprint 3 - Rapports | 13-16 | 1 semaine | ⏳ À venir | ░░░░░░░░░░ 0% |
 | Sprint 4 - Évolutions | 17-19 | TBD | ⏳ Backlog | ░░░░░░░░░░ 0% |
@@ -642,7 +657,7 @@
 - [X] CRUD Immeubles
 - [X] CRUD Lots
 - [X] CRUD Locataires
-- [ ] CRUD Baux avec génération échéances
+- [X] CRUD Baux avec génération échéances
 - [ ] Enregistrement paiements
 - [ ] Génération quittances PDF
 - [ ] Dashboard avec KPIs
@@ -653,12 +668,12 @@
 | Phase | Nom | Statut |
 |-------|-----|--------|
 | 1 | Setup Initial | ✅ |
-| 2 | Base de données | 🔄 (buildings, units done) |
+| 2 | Base de données | 🔄 (buildings, units, tenants, leases done) |
 | 3 | Authentification | ✅ |
 | 4 | Module Immeubles | ✅ |
 | 5 | Module Lots | ✅ |
 | 6 | Module Locataires | ✅ |
-| 7 | Module Baux | ⬜ |
+| 7 | Module Baux | ✅ |
 | 8 | Paiements | ⬜ |
 | 9 | Quittances PDF | ⬜ |
 | 10 | Dashboard | ⬜ |
@@ -680,6 +695,7 @@
 | 2026-01-07 | Phase 4 | Module Immeubles complet | Bug LocaleDataException corrigé | CRUD complet, 44 tâches, migration SQL, RLS, tests Playwright |
 | 2026-01-07 | Phase 5 | Module Lots complet | Aucun | 73 tâches, CRUD complet, équipements, photos, migration SQL, RLS, tests Playwright |
 | 2026-01-08 | Phase 6 | Module Locataires complet | Bug null check corrigé | CRUD complet, upload documents, validation téléphone CI, tests Playwright |
+| 2026-01-08 | Phase 7 | Module Baux complet | Bug DatePicker + rent_schedules corrigés | CRUD complet, sélection 2 étapes, génération échéances, tests Playwright |
 
 ---
 
@@ -718,4 +734,4 @@ flutter build web --release
 
 ---
 
-*Dernière mise à jour : 7 Janvier 2026*
+*Dernière mise à jour : 8 Janvier 2026*

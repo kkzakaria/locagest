@@ -20,6 +20,10 @@ import '../../presentation/pages/tenants/tenants_list_page.dart';
 import '../../presentation/pages/tenants/tenant_form_page.dart';
 import '../../presentation/pages/tenants/tenant_detail_page.dart';
 import '../../presentation/pages/tenants/tenant_edit_page.dart';
+import '../../presentation/pages/leases/leases_list_page.dart';
+import '../../presentation/pages/leases/lease_form_page.dart';
+import '../../presentation/pages/leases/lease_detail_page.dart';
+import '../../presentation/pages/leases/lease_edit_page.dart';
 
 /// Route paths
 class AppRoutes {
@@ -48,6 +52,12 @@ class AppRoutes {
   static const String tenantNew = '/tenants/new';
   static const String tenantDetail = '/tenants/:id';
   static const String tenantEdit = '/tenants/:id/edit';
+
+  // Leases routes
+  static const String leases = '/leases';
+  static const String leaseNew = '/leases/new';
+  static const String leaseDetail = '/leases/:id';
+  static const String leaseEdit = '/leases/:id/edit';
 }
 
 /// GoRouter provider with auth redirect logic
@@ -205,6 +215,38 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final id = state.pathParameters['id']!;
           return TenantEditPage(tenantId: id);
+        },
+      ),
+
+      // Leases routes
+      GoRoute(
+        path: AppRoutes.leases,
+        name: 'leases',
+        builder: (context, state) => const LeasesListPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.leaseNew,
+        name: 'lease-new',
+        builder: (context, state) {
+          final unitId = state.uri.queryParameters['unitId'];
+          final tenantId = state.uri.queryParameters['tenantId'];
+          return LeaseFormPage(unitId: unitId, tenantId: tenantId);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.leaseDetail,
+        name: 'lease-detail',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return LeaseDetailPage(leaseId: id);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.leaseEdit,
+        name: 'lease-edit',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return LeaseEditPage(leaseId: id);
         },
       ),
 
