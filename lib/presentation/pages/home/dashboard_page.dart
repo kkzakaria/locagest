@@ -247,6 +247,14 @@ class DashboardPage extends ConsumerWidget {
       onTap: () => context.push(AppRoutes.buildings),
     ));
 
+    // View tenants (all users)
+    actions.add(_buildActionCard(
+      context,
+      icon: Icons.people,
+      label: 'Voir les locataires',
+      onTap: () => context.push(AppRoutes.tenants),
+    ));
+
     // User management (admin only)
     if (user?.canManageUsers ?? false) {
       actions.add(_buildActionCard(

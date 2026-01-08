@@ -16,6 +16,10 @@ import '../../presentation/pages/buildings/building_edit_page.dart';
 import '../../presentation/pages/units/unit_form_page.dart';
 import '../../presentation/pages/units/unit_detail_page.dart';
 import '../../presentation/pages/units/unit_edit_page.dart';
+import '../../presentation/pages/tenants/tenants_list_page.dart';
+import '../../presentation/pages/tenants/tenant_form_page.dart';
+import '../../presentation/pages/tenants/tenant_detail_page.dart';
+import '../../presentation/pages/tenants/tenant_edit_page.dart';
 
 /// Route paths
 class AppRoutes {
@@ -38,6 +42,12 @@ class AppRoutes {
   static const String unitNew = '/buildings/:buildingId/units/create';
   static const String unitDetail = '/buildings/:buildingId/units/:unitId';
   static const String unitEdit = '/buildings/:buildingId/units/:unitId/edit';
+
+  // Tenants routes
+  static const String tenants = '/tenants';
+  static const String tenantNew = '/tenants/new';
+  static const String tenantDetail = '/tenants/:id';
+  static const String tenantEdit = '/tenants/:id/edit';
 }
 
 /// GoRouter provider with auth redirect logic
@@ -167,6 +177,34 @@ final routerProvider = Provider<GoRouter>((ref) {
           final buildingId = state.pathParameters['buildingId']!;
           final unitId = state.pathParameters['unitId']!;
           return UnitEditPage(buildingId: buildingId, unitId: unitId);
+        },
+      ),
+
+      // Tenants routes
+      GoRoute(
+        path: AppRoutes.tenants,
+        name: 'tenants',
+        builder: (context, state) => const TenantsListPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.tenantNew,
+        name: 'tenant-new',
+        builder: (context, state) => const TenantFormPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.tenantDetail,
+        name: 'tenant-detail',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return TenantDetailPage(tenantId: id);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.tenantEdit,
+        name: 'tenant-edit',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return TenantEditPage(tenantId: id);
         },
       ),
 
