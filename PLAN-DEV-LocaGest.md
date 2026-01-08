@@ -631,7 +631,7 @@
 
 | Sprint | Phases | Durée | Statut | Progression |
 |--------|--------|-------|--------|-------------|
-| Sprint 1 - MVP | 1-11 | 2 semaines | 🔄 En cours | █████░░░░░ 45% |
+| Sprint 1 - MVP | 1-11 | 2 semaines | 🔄 En cours | ██████░░░░ 55% |
 | Sprint 2 - États des lieux | 12 | 1 semaine | ⏳ À venir | ░░░░░░░░░░ 0% |
 | Sprint 3 - Rapports | 13-16 | 1 semaine | ⏳ À venir | ░░░░░░░░░░ 0% |
 | Sprint 4 - Évolutions | 17-19 | TBD | ⏳ Backlog | ░░░░░░░░░░ 0% |
@@ -641,7 +641,7 @@
 - [X] Authentification fonctionnelle
 - [X] CRUD Immeubles
 - [X] CRUD Lots
-- [ ] CRUD Locataires
+- [X] CRUD Locataires
 - [ ] CRUD Baux avec génération échéances
 - [ ] Enregistrement paiements
 - [ ] Génération quittances PDF
@@ -657,7 +657,7 @@
 | 3 | Authentification | ✅ |
 | 4 | Module Immeubles | ✅ |
 | 5 | Module Lots | ✅ |
-| 6 | Module Locataires | ⬜ |
+| 6 | Module Locataires | ✅ |
 | 7 | Module Baux | ⬜ |
 | 8 | Paiements | ⬜ |
 | 9 | Quittances PDF | ⬜ |
@@ -679,7 +679,7 @@
 | 2026-01-06 | Phase 3 | Authentification complète | Aucun | Login, Register, Password Reset, RBAC, Logout |
 | 2026-01-07 | Phase 4 | Module Immeubles complet | Bug LocaleDataException corrigé | CRUD complet, 44 tâches, migration SQL, RLS, tests Playwright |
 | 2026-01-07 | Phase 5 | Module Lots complet | Aucun | 73 tâches, CRUD complet, équipements, photos, migration SQL, RLS, tests Playwright |
-| | | | | |
+| 2026-01-08 | Phase 6 | Module Locataires complet | Bug null check corrigé | CRUD complet, upload documents, validation téléphone CI, tests Playwright |
 
 ---
 
