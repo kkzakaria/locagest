@@ -377,25 +377,38 @@
 
 ---
 
-## Phase 6 : Module Locataires
+## Phase 6 : Module Locataires ✅ TERMINÉE
 
 ### 6.1 Data Layer
-- [ ] 🔴 Créer `TenantModel`
-- [ ] 🔴 Créer `TenantDatasource`
-- [ ] 🔴 Créer `TenantRepository`
+- [X] 🔴 Créer `TenantModel`
+- [X] 🔴 Créer `TenantDatasource`
+- [X] 🔴 Créer `TenantRepository`
 
 ### 6.2 Domain Layer
-- [ ] 🔴 Créer `Tenant` entity
-- [ ] 🔴 Use cases CRUD
+- [X] 🔴 Créer `Tenant` entity
+- [X] 🔴 Use cases CRUD
 
 ### 6.3 Presentation Layer
-- [ ] 🔴 Créer `TenantsProvider`
-- [ ] 🔴 Page liste locataires (`tenants_list_page.dart`)
-- [ ] 🔴 Page détail locataire (`tenant_detail_page.dart`)
-- [ ] 🔴 Formulaire locataire (`tenant_form_page.dart`)
-- [ ] 🟡 Widget `TenantCard`
+- [X] 🔴 Créer `TenantsProvider`
+- [X] 🔴 Page liste locataires (`tenants_list_page.dart`)
+- [X] 🔴 Page détail locataire (`tenant_detail_page.dart`)
+- [X] 🔴 Formulaire locataire (`tenant_form_page.dart`)
+- [X] 🟡 Widget `TenantCard`
 
-**✅ Checkpoint Phase 6 :** CRUD Locataires complet
+### 6.4 Fonctionnalités supplémentaires implémentées
+- [X] Migration SQL avec RLS policies
+- [X] Upload documents (pièce d'identité, garant)
+- [X] Validation téléphone Côte d'Ivoire (+225, 07, 05, 01)
+- [X] Recherche par nom ou téléphone
+- [X] Badge statut (Actif/Inactif)
+- [X] Section informations professionnelles
+- [X] Section garant avec document
+- [X] Section historique des baux (placeholder)
+- [X] Contrôle d'accès basé sur les rôles (RBAC)
+- [X] Messages d'erreur en français
+- [X] Tests Playwright validés
+
+**✅ Checkpoint Phase 6 :** CRUD Locataires complet ✔️
 
 ---
 
