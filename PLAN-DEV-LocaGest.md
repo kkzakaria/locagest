@@ -452,29 +452,41 @@
 
 ---
 
-## Phase 8 : Module Échéances et Paiements
+## Phase 8 : Module Échéances et Paiements ✅ TERMINÉE
 
 ### 8.1 Data Layer
-- [ ] 🔴 Créer `RentScheduleModel` et `PaymentModel`
-- [ ] 🔴 Créer les datasources et repositories
+- [X] 🔴 Créer `RentScheduleModel` et `PaymentModel`
+- [X] 🔴 Créer les datasources et repositories
 
 ### 8.2 Domain Layer
-- [ ] 🔴 Créer les entities
-- [ ] 🔴 Use cases : `GetRentSchedules`, `GetOverdueSchedules`, `CreatePayment`
+- [X] 🔴 Créer les entities
+- [X] 🔴 Use cases : `GetRentSchedules`, `GetOverdueSchedules`, `CreatePayment`
 
 ### 8.3 Presentation Layer
-- [ ] 🔴 Créer `PaymentsProvider`
-- [ ] 🔴 Page paiements (`payments_page.dart`)
-- [ ] 🔴 Modal enregistrement paiement (`payment_form_modal.dart`)
-- [ ] 🔴 Historique paiements dans fiche locataire/lot
-- [ ] 🟡 Widgets : `RentScheduleCard`, `PaymentStatusBadge`
+- [X] 🔴 Créer `PaymentsProvider`
+- [X] 🔴 Page paiements (`payments_page.dart`)
+- [X] 🔴 Modal enregistrement paiement (`payment_form_modal.dart`)
+- [X] 🔴 Historique paiements dans fiche locataire/lot
+- [X] 🟡 Widgets : `RentScheduleCard`, `PaymentStatusBadge`
 
 ### 8.4 Logique métier
-- [ ] 🔴 Calcul automatique du solde
-- [ ] 🔴 Mise à jour statut échéance
-- [ ] 🔴 Gestion paiements partiels
+- [X] 🔴 Calcul automatique du solde
+- [X] 🔴 Mise à jour statut échéance
+- [X] 🔴 Gestion paiements partiels
 
-**✅ Checkpoint Phase 8 :** Enregistrement paiements, suivi impayés
+### 8.5 Fonctionnalités supplémentaires implémentées
+- [X] Migration SQL avec RLS policies et triggers (006_payments.sql)
+- [X] Page centralisée des paiements avec filtres (statut, période, locataire)
+- [X] Cartes résumé (Dû ce mois, Collecté, Impayés)
+- [X] Visualisation des impayés avec jours de retard
+- [X] Modal édition/suppression paiements (PaymentEditModal)
+- [X] Historique paiements dans fiche locataire (TenantPaymentsSummaryCard)
+- [X] Contrôle d'accès basé sur les rôles (RBAC)
+- [X] Messages et labels en français
+- [X] Formatage FCFA et dates françaises
+- [X] Tests Playwright validés
+
+**✅ Checkpoint Phase 8 :** Enregistrement paiements, suivi impayés ✔️
 
 ---
 
@@ -646,7 +658,7 @@
 
 | Sprint | Phases | Durée | Statut | Progression |
 |--------|--------|-------|--------|-------------|
-| Sprint 1 - MVP | 1-11 | 2 semaines | 🔄 En cours | ███████░░░ 65% |
+| Sprint 1 - MVP | 1-11 | 2 semaines | 🔄 En cours | ████████░░ 75% |
 | Sprint 2 - États des lieux | 12 | 1 semaine | ⏳ À venir | ░░░░░░░░░░ 0% |
 | Sprint 3 - Rapports | 13-16 | 1 semaine | ⏳ À venir | ░░░░░░░░░░ 0% |
 | Sprint 4 - Évolutions | 17-19 | TBD | ⏳ Backlog | ░░░░░░░░░░ 0% |
@@ -658,7 +670,7 @@
 - [X] CRUD Lots
 - [X] CRUD Locataires
 - [X] CRUD Baux avec génération échéances
-- [ ] Enregistrement paiements
+- [X] Enregistrement paiements
 - [ ] Génération quittances PDF
 - [ ] Dashboard avec KPIs
 - [ ] Tests validés
@@ -668,13 +680,13 @@
 | Phase | Nom | Statut |
 |-------|-----|--------|
 | 1 | Setup Initial | ✅ |
-| 2 | Base de données | 🔄 (buildings, units, tenants, leases done) |
+| 2 | Base de données | 🔄 (buildings, units, tenants, leases, payments done) |
 | 3 | Authentification | ✅ |
 | 4 | Module Immeubles | ✅ |
 | 5 | Module Lots | ✅ |
 | 6 | Module Locataires | ✅ |
 | 7 | Module Baux | ✅ |
-| 8 | Paiements | ⬜ |
+| 8 | Paiements | ✅ |
 | 9 | Quittances PDF | ⬜ |
 | 10 | Dashboard | ⬜ |
 | 11 | Tests & Corrections | ⬜ |
@@ -696,6 +708,7 @@
 | 2026-01-07 | Phase 5 | Module Lots complet | Aucun | 73 tâches, CRUD complet, équipements, photos, migration SQL, RLS, tests Playwright |
 | 2026-01-08 | Phase 6 | Module Locataires complet | Bug null check corrigé | CRUD complet, upload documents, validation téléphone CI, tests Playwright |
 | 2026-01-08 | Phase 7 | Module Baux complet | Bug DatePicker + rent_schedules corrigés | CRUD complet, sélection 2 étapes, génération échéances, tests Playwright |
+| 2026-01-08 | Phase 8 | Module Paiements complet | Aucun | 73 tâches (6 user stories), page paiements, filtres, impayés, edit/delete, historique locataire, tests Playwright |
 
 ---
 
@@ -734,4 +747,4 @@ flutter build web --release
 
 ---
 
-*Dernière mise à jour : 8 Janvier 2026*
+*Dernière mise à jour : 8 Janvier 2026 - Phase 8 (Paiements) terminée*

@@ -8,6 +8,8 @@ import '../../../domain/entities/lease.dart';
 import '../../../domain/entities/rent_schedule.dart';
 import '../../providers/leases_provider.dart';
 import '../../widgets/leases/lease_status_badge.dart';
+import '../../widgets/payments/payment_history_list.dart';
+import '../payments/payment_form_modal.dart';
 
 /// Page displaying full lease details including tenant, unit, amounts,
 /// dates, and rent schedules
@@ -618,7 +620,7 @@ class LeaseDetailPage extends ConsumerWidget {
         // Summary card
         summaryAsync.when(
           loading: () => const SizedBox.shrink(),
-          error: (_, __) => const SizedBox.shrink(),
+          error: (error, stack) => const SizedBox.shrink(),
           data: (summary) => Card(
             color: Theme.of(context).primaryColor.withValues(alpha: 0.05),
             elevation: 0,
@@ -726,67 +728,84 @@ class LeaseDetailPage extends ConsumerWidget {
   }
 
   Widget _buildScheduleRow(BuildContext context, WidgetRef ref, RentSchedule schedule) {
-    return InkWell(
-      onTap: schedule.canRecordPayment
-          ? () => _showRecordPaymentDialog(context, ref, schedule)
-          : null,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        child: Row(
+    return Theme(
+      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+      child: ExpansionTile(
+        tilePadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+        childrenPadding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+        leading: Container(
+          width: 8,
+          height: 8,
+          decoration: BoxDecoration(
+            color: schedule.statusColor,
+            shape: BoxShape.circle,
+          ),
+        ),
+        title: Row(
           children: [
-            // Status indicator
-            Container(
-              width: 8,
-              height: 8,
-              decoration: BoxDecoration(
-                color: schedule.statusColor,
-                shape: BoxShape.circle,
-              ),
-            ),
-            const SizedBox(width: 12),
-
-            // Period
             Expanded(
-              flex: 2,
               child: Text(
                 schedule.periodLabel,
-                style: const TextStyle(fontWeight: FontWeight.w500),
+                style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
               ),
             ),
-
-            // Amount/balance
-            Expanded(
-              flex: 2,
-              child: Text(
-                schedule.isPaid ? schedule.amountDueFormatted : schedule.balanceFormatted,
-                textAlign: TextAlign.end,
-                style: TextStyle(
-                  color: schedule.isPaid ? Colors.green : null,
-                  fontWeight: schedule.isOverdue ? FontWeight.w600 : null,
-                ),
-              ),
-            ),
-
-            const SizedBox(width: 8),
-
-            // Status badge
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
-                color: schedule.statusColor.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Text(
-                schedule.statusLabel,
-                style: TextStyle(
-                  fontSize: 11,
-                  color: schedule.statusColor,
-                  fontWeight: FontWeight.w500,
-                ),
+            Text(
+              schedule.isPaid ? schedule.amountDueFormatted : schedule.balanceFormatted,
+              style: TextStyle(
+                color: schedule.isPaid ? Colors.green : null,
+                fontWeight: schedule.isOverdue ? FontWeight.w600 : null,
+                fontSize: 14,
               ),
             ),
           ],
         ),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: schedule.statusColor.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  schedule.statusLabel,
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: schedule.statusColor,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              if (schedule.amountPaid > 0) ...[
+                const SizedBox(width: 8),
+                PaymentHistoryInline(scheduleId: schedule.id),
+              ],
+            ],
+          ),
+        ),
+        children: [
+          // Payment history
+          PaymentHistoryList(
+            scheduleId: schedule.id,
+            showHeader: true,
+            compact: true,
+          ),
+
+          // Record payment button
+          if (schedule.canRecordPayment) ...[
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: () => _showRecordPaymentDialog(context, ref, schedule),
+                icon: const Icon(Icons.add, size: 18),
+                label: const Text('Enregistrer un paiement'),
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }
@@ -796,79 +815,20 @@ class LeaseDetailPage extends ConsumerWidget {
     WidgetRef ref,
     RentSchedule schedule,
   ) {
-    final amountController = TextEditingController(
-      text: schedule.remainingBalance.toStringAsFixed(0),
-    );
+    // Get tenant name from lease if available
+    final leaseAsync = ref.read(leaseByIdProvider(leaseId));
+    final tenantName = leaseAsync.valueOrNull?.tenantFullName;
 
-    showDialog(
+    PaymentFormModal.show(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Enregistrer un paiement - ${schedule.periodLabel}'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Solde restant: ${schedule.remainingBalanceFormatted}'),
-            const SizedBox(height: 16),
-            TextField(
-              controller: amountController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Montant du paiement (FCFA)',
-                prefixIcon: Icon(Icons.payments),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Annuler'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              final amount = double.tryParse(amountController.text) ?? 0;
-              if (amount <= 0) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Montant invalide')),
-                );
-                return;
-              }
-
-              Navigator.pop(context);
-              await _handleRecordPayment(context, ref, schedule.id, amount);
-            },
-            child: const Text('Enregistrer'),
-          ),
-        ],
-      ),
+      schedule: schedule,
+      tenantName: tenantName,
+      onPaymentCreated: () {
+        // Refresh schedules after payment
+        ref.invalidate(rentSchedulesProvider(leaseId));
+        ref.invalidate(rentSchedulesSummaryProvider(leaseId));
+      },
     );
-  }
-
-  Future<void> _handleRecordPayment(
-    BuildContext context,
-    WidgetRef ref,
-    String scheduleId,
-    double amount,
-  ) async {
-    final notifier = ref.read(recordPaymentProvider.notifier);
-    final updatedSchedule = await notifier.recordPayment(
-      scheduleId: scheduleId,
-      amount: amount,
-      paymentDate: DateTime.now(),
-    );
-
-    if (updatedSchedule != null && context.mounted) {
-      ref.invalidate(rentSchedulesProvider(leaseId));
-      ref.invalidate(rentSchedulesSummaryProvider(leaseId));
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Paiement enregistre'),
-          backgroundColor: Colors.green,
-        ),
-      );
-    }
   }
 
   Widget _buildErrorState(BuildContext context, String error, WidgetRef ref) {

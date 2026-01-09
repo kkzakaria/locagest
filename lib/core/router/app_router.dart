@@ -24,6 +24,7 @@ import '../../presentation/pages/leases/leases_list_page.dart';
 import '../../presentation/pages/leases/lease_form_page.dart';
 import '../../presentation/pages/leases/lease_detail_page.dart';
 import '../../presentation/pages/leases/lease_edit_page.dart';
+import '../../presentation/pages/payments/payments_page.dart';
 
 /// Route paths
 class AppRoutes {
@@ -58,6 +59,9 @@ class AppRoutes {
   static const String leaseNew = '/leases/new';
   static const String leaseDetail = '/leases/:id';
   static const String leaseEdit = '/leases/:id/edit';
+
+  // Payments routes
+  static const String payments = '/payments';
 }
 
 /// GoRouter provider with auth redirect logic
@@ -250,6 +254,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
 
+      // Payments routes
+      GoRoute(
+        path: AppRoutes.payments,
+        name: 'payments',
+        builder: (context, state) => const PaymentsPage(),
+      ),
+
       // Root redirect
       GoRoute(
         path: '/',
@@ -302,4 +313,7 @@ extension GoRouterExtension on BuildContext {
   // Buildings navigation
   void goToBuildings() => go(AppRoutes.buildings);
   void goToNewBuilding() => go(AppRoutes.buildingNew);
+
+  // Payments navigation
+  void goToPayments() => go(AppRoutes.payments);
 }
