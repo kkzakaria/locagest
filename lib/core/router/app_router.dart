@@ -26,6 +26,7 @@ import '../../presentation/pages/leases/lease_detail_page.dart';
 import '../../presentation/pages/leases/lease_edit_page.dart';
 import '../../presentation/pages/payments/payments_page.dart';
 import '../../presentation/pages/receipts/receipt_preview_page.dart';
+import '../../presentation/widgets/dashboard/main_navigation_shell.dart';
 
 /// Route paths
 class AppRoutes {
@@ -107,7 +108,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       return null;
     },
     routes: [
-      // Auth routes
+      // Auth routes (outside shell - no bottom nav)
       GoRoute(
         path: AppRoutes.login,
         name: 'login',
@@ -129,13 +130,38 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const ResetPasswordPage(),
       ),
 
-      // Main app routes
-      GoRoute(
-        path: AppRoutes.dashboard,
-        name: 'dashboard',
-        builder: (context, state) => const DashboardPage(),
+      // Main app routes with bottom navigation (T062-T063)
+      ShellRoute(
+        builder: (context, state, child) => MainNavigationShell(child: child),
+        routes: [
+          // Dashboard
+          GoRoute(
+            path: AppRoutes.dashboard,
+            name: 'dashboard',
+            builder: (context, state) => const DashboardPage(),
+          ),
+          // Buildings list
+          GoRoute(
+            path: AppRoutes.buildings,
+            name: 'buildings',
+            builder: (context, state) => const BuildingsListPage(),
+          ),
+          // Tenants list
+          GoRoute(
+            path: AppRoutes.tenants,
+            name: 'tenants',
+            builder: (context, state) => const TenantsListPage(),
+          ),
+          // Payments
+          GoRoute(
+            path: AppRoutes.payments,
+            name: 'payments',
+            builder: (context, state) => const PaymentsPage(),
+          ),
+        ],
       ),
 
+      // Detail routes outside shell (no bottom nav on detail pages - T064)
       // Settings routes
       GoRoute(
         path: AppRoutes.userManagement,
@@ -143,12 +169,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const UserManagementPage(),
       ),
 
-      // Buildings routes
-      GoRoute(
-        path: AppRoutes.buildings,
-        name: 'buildings',
-        builder: (context, state) => const BuildingsListPage(),
-      ),
+      // Buildings detail routes
       GoRoute(
         path: AppRoutes.buildingNew,
         name: 'building-new',
@@ -199,12 +220,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
 
-      // Tenants routes
-      GoRoute(
-        path: AppRoutes.tenants,
-        name: 'tenants',
-        builder: (context, state) => const TenantsListPage(),
-      ),
+      // Tenants detail routes
       GoRoute(
         path: AppRoutes.tenantNew,
         name: 'tenant-new',
@@ -257,13 +273,6 @@ final routerProvider = Provider<GoRouter>((ref) {
           final id = state.pathParameters['id']!;
           return LeaseEditPage(leaseId: id);
         },
-      ),
-
-      // Payments routes
-      GoRoute(
-        path: AppRoutes.payments,
-        name: 'payments',
-        builder: (context, state) => const PaymentsPage(),
       ),
 
       // Receipts routes

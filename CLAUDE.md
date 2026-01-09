@@ -110,6 +110,8 @@ All tables use Row Level Security (RLS) with policies based on user roles.
 - Supabase PostgreSQL (leases, rent_schedules tables) + existing profiles, buildings, units, tenants tables (005-lease-management)
 - Dart 3.x with Flutter SDK (stable channel) + flutter_riverpod 2.6.x, go_router 14.x, freezed 2.5.x, supabase_flutter 2.8.x, intl (date/currency formatting) (006-payment-management)
 - Supabase PostgreSQL with RLS - new `payments` table linking to existing `rent_schedules` (006-payment-management)
+- Dart 3.x (Flutter SDK ^3.10.4, stable channel) + flutter_riverpod 2.6.x, go_router 14.x, supabase_flutter 2.8.x, intl 0.20.x (008-dashboard)
+- Supabase PostgreSQL (existing tables: profiles, buildings, units, tenants, leases, rent_schedules, payments) (008-dashboard)
 
 ## Recent Changes
 - 001-user-auth: Added Dart 3.x (Flutter SDK stable) + supabase_flutter, flutter_riverpod, go_router, freezed, flutter_secure_storage
