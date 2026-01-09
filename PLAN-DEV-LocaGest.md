@@ -524,22 +524,37 @@
 
 ---
 
-## Phase 10 : Dashboard
+## Phase 10 : Dashboard ✅ TERMINÉE
 
 ### 10.1 Provider
-- [ ] 🔴 Créer `DashboardProvider`
-- [ ] 🔴 Requêtes agrégées pour KPIs
+- [X] 🔴 Créer `DashboardProvider`
+- [X] 🔴 Requêtes agrégées pour KPIs
 
 ### 10.2 Page Dashboard
-- [ ] 🔴 KPIs : biens, revenus, impayés, taux occupation
-- [ ] 🔴 Liste des impayés (top 5)
-- [ ] 🟡 Baux expirant bientôt
-- [ ] 🔴 Navigation rapide
+- [X] 🔴 KPIs : biens, revenus, impayés, taux occupation
+- [X] 🔴 Liste des impayés (top 5)
+- [X] 🟡 Baux expirant bientôt
+- [X] 🔴 Navigation rapide
 
 ### 10.3 Navigation principale
-- [ ] 🔴 Bottom navigation bar
+- [X] 🔴 Bottom navigation bar
 
-**✅ Checkpoint Phase 10 :** Dashboard fonctionnel
+### 10.4 Fonctionnalités supplémentaires implémentées
+- [X] Entities DashboardStats, OverdueRent, ExpiringLease
+- [X] Freezed models avec JSON serialization
+- [X] DashboardRemoteDatasource avec requêtes parallèles (Future.wait)
+- [X] KPI Cards (immeubles, locataires, revenus, impayés)
+- [X] Taux d'occupation avec code couleur (vert >85%, orange 70-85%, rouge <70%)
+- [X] Section Impayés avec top 5 et navigation vers détails
+- [X] Section Baux à renouveler (30 jours) avec indicateur urgence
+- [X] Quick Actions avec filtrage RBAC
+- [X] ShellRoute avec Bottom Navigation Bar (4 onglets)
+- [X] Pull-to-refresh sur le dashboard
+- [X] États vides avec messages français
+- [X] Formatage FCFA et dates françaises
+- [X] Tests Playwright validés
+
+**✅ Checkpoint Phase 10 :** Dashboard fonctionnel ✔️
 
 ---
 
@@ -672,7 +687,7 @@
 
 | Sprint | Phases | Durée | Statut | Progression |
 |--------|--------|-------|--------|-------------|
-| Sprint 1 - MVP | 1-11 | 2 semaines | 🔄 En cours | █████████░ 85% |
+| Sprint 1 - MVP | 1-11 | 2 semaines | 🔄 En cours | ██████████ 95% |
 | Sprint 2 - États des lieux | 12 | 1 semaine | ⏳ À venir | ░░░░░░░░░░ 0% |
 | Sprint 3 - Rapports | 13-16 | 1 semaine | ⏳ À venir | ░░░░░░░░░░ 0% |
 | Sprint 4 - Évolutions | 17-19 | TBD | ⏳ Backlog | ░░░░░░░░░░ 0% |
@@ -686,7 +701,7 @@
 - [X] CRUD Baux avec génération échéances
 - [X] Enregistrement paiements
 - [X] Génération quittances PDF
-- [ ] Dashboard avec KPIs
+- [X] Dashboard avec KPIs
 - [ ] Tests validés
 
 ## Progression par phase
@@ -702,7 +717,7 @@
 | 7 | Module Baux | ✅ |
 | 8 | Paiements | ✅ |
 | 9 | Quittances PDF | ✅ |
-| 10 | Dashboard | ⬜ |
+| 10 | Dashboard | ✅ |
 | 11 | Tests & Corrections | ⬜ |
 | 12 | États des lieux | ⬜ |
 | 13 | Rapports | ⬜ |
@@ -724,6 +739,7 @@
 | 2026-01-08 | Phase 7 | Module Baux complet | Bug DatePicker + rent_schedules corrigés | CRUD complet, sélection 2 étapes, génération échéances, tests Playwright |
 | 2026-01-08 | Phase 8 | Module Paiements complet | Aucun | 73 tâches (6 user stories), page paiements, filtres, impayés, edit/delete, historique locataire, tests Playwright |
 | 2026-01-09 | Phase 9 | Quittances PDF complet | Aucun | 50 tâches (5 user stories), génération PDF, prévisualisation, partage, sauvegarde cloud, historique par bail/locataire, tests Playwright |
+| 2026-01-09 | Phase 10 | Dashboard complet | Aucun | 74 tâches (6 user stories), KPIs, impayés, baux expirants, taux occupation, quick actions, bottom navigation, tests Playwright |
 
 ---
 
@@ -762,4 +778,4 @@ flutter build web --release
 
 ---
 
-*Dernière mise à jour : 9 Janvier 2026 - Phase 9 (Quittances PDF) terminée*
+*Dernière mise à jour : 9 Janvier 2026 - Phase 10 (Dashboard) terminée*

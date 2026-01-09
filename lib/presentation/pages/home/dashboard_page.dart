@@ -4,15 +4,27 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/router/app_router.dart';
 import '../../../domain/entities/user.dart';
+import '../../../domain/entities/overdue_rent.dart';
+import '../../../domain/entities/expiring_lease.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/dashboard_provider.dart';
+import '../../widgets/dashboard/kpi_grid_section.dart';
+import '../../widgets/dashboard/overdue_rents_section.dart';
+import '../../widgets/dashboard/expiring_leases_section.dart';
+import '../../widgets/dashboard/occupancy_rate_widget.dart';
 
 /// Main dashboard page after login
+/// Displays KPIs, overdue rents, expiring leases, and quick actions
 class DashboardPage extends ConsumerWidget {
   const DashboardPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(currentUserProvider);
+    final statsAsync = ref.watch(dashboardStatsProvider);
+    final overdueAsync = ref.watch(overdueRentsProvider);
+    final expiringAsync = ref.watch(expiringLeasesProvider);
+    final totalOverdueAsync = ref.watch(totalOverdueCountProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -91,7 +103,8 @@ class DashboardPage extends ConsumerWidget {
                 value: 'logout',
                 child: ListTile(
                   leading: Icon(Icons.logout, color: Colors.red),
-                  title: Text('Deconnexion', style: TextStyle(color: Colors.red)),
+                  title:
+                      Text('Deconnexion', style: TextStyle(color: Colors.red)),
                   contentPadding: EdgeInsets.zero,
                 ),
               ),
@@ -101,7 +114,13 @@ class DashboardPage extends ConsumerWidget {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          await ref.read(authProvider.notifier).refreshUser();
+          // Invalidate all dashboard providers
+          ref.invalidate(dashboardStatsProvider);
+          ref.invalidate(overdueRentsProvider);
+          ref.invalidate(expiringLeasesProvider);
+          ref.invalidate(totalOverdueCountProvider);
+          // Wait for the main stats to reload
+          await ref.read(dashboardStatsProvider.future);
         },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -125,12 +144,35 @@ class DashboardPage extends ConsumerWidget {
               ),
               const SizedBox(height: 24),
 
-              // Quick stats cards (placeholder for now)
-              _buildQuickStats(context, user),
+              // KPI Cards Section (T022-T025)
+              _buildKpiSection(context, ref, statsAsync, user),
 
               const SizedBox(height: 24),
 
-              // Quick actions
+              // Occupancy Rate Section (US4)
+              statsAsync.when(
+                data: (stats) => OccupancyRateWidget(
+                  occupancyRate: stats.occupancyRate,
+                  totalUnits: stats.totalUnitsCount,
+                  occupiedUnits: stats.occupiedUnitsCount,
+                ),
+                loading: () => const OccupancyRateWidgetLoading(),
+                error: (_, __) => const SizedBox.shrink(),
+              ),
+
+              const SizedBox(height: 24),
+
+              // Overdue Rents Section (US2)
+              _buildOverdueSection(context, ref, overdueAsync, totalOverdueAsync),
+
+              const SizedBox(height: 24),
+
+              // Expiring Leases Section (US3)
+              _buildExpiringSection(context, ref, expiringAsync),
+
+              const SizedBox(height: 24),
+
+              // Quick actions (US5)
               Text(
                 'Actions rapides',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -139,6 +181,8 @@ class DashboardPage extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               _buildQuickActions(context, user),
+
+              const SizedBox(height: 24),
             ],
           ),
         ),
@@ -146,82 +190,78 @@ class DashboardPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildQuickStats(BuildContext context, User? user) {
-    return GridView.count(
-      crossAxisCount: 2,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisSpacing: 16,
-      mainAxisSpacing: 16,
-      childAspectRatio: 1.5,
-      children: [
-        _buildStatCard(
-          context,
-          icon: Icons.home_work,
-          label: 'Immeubles',
-          value: '0',
-          color: Colors.blue,
-        ),
-        _buildStatCard(
-          context,
-          icon: Icons.people,
-          label: 'Locataires',
-          value: '0',
-          color: Colors.green,
-        ),
-        _buildStatCard(
-          context,
-          icon: Icons.receipt,
-          label: 'Loyers ce mois',
-          value: '0 FCFA',
-          color: Colors.orange,
-        ),
-        _buildStatCard(
-          context,
-          icon: Icons.warning,
-          label: 'Impayes',
-          value: '0',
-          color: Colors.red,
-        ),
-      ],
+  /// Build KPI section with loading/error/empty states (T022-T025)
+  Widget _buildKpiSection(
+    BuildContext context,
+    WidgetRef ref,
+    AsyncValue statsAsync,
+    User? user,
+  ) {
+    return statsAsync.when(
+      data: (stats) {
+        // Empty state (T025)
+        if (stats.buildingsCount == 0) {
+          return KpiGridSectionEmpty(
+            onAddBuilding: (user?.canManageBuildings ?? false)
+                ? () => context.push(AppRoutes.buildingNew)
+                : null,
+          );
+        }
+        // Normal display
+        return KpiGridSection(stats: stats);
+      },
+      // Loading state (T023)
+      loading: () => const KpiGridSectionLoading(),
+      // Error state (T024)
+      error: (error, _) => KpiGridSectionError(
+        message: error.toString(),
+        onRetry: () => ref.invalidate(dashboardStatsProvider),
+      ),
     );
   }
 
-  Widget _buildStatCard(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required String value,
-    required Color color,
-  }) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Icon(icon, color: color, size: 28),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  value,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-                Text(
-                  label,
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+  /// Build overdue rents section (US2)
+  Widget _buildOverdueSection(
+    BuildContext context,
+    WidgetRef ref,
+    AsyncValue<List<OverdueRent>> overdueAsync,
+    AsyncValue<int> totalOverdueAsync,
+  ) {
+    return overdueAsync.when(
+      data: (overdueRents) {
+        final totalCount = totalOverdueAsync.valueOrNull ?? overdueRents.length;
+        return OverdueRentsSection(
+          overdueRents: overdueRents,
+          totalCount: totalCount,
+          onSeeAll: totalCount > 5
+              ? () => context.push(AppRoutes.payments)
+              : null,
+          onItemTap: (rent) => context.push('/leases/${rent.leaseId}'),
+        );
+      },
+      loading: () => const OverdueRentsSectionLoading(),
+      error: (error, _) => OverdueRentsSectionError(
+        message: error.toString(),
+        onRetry: () => ref.invalidate(overdueRentsProvider),
+      ),
+    );
+  }
+
+  /// Build expiring leases section (US3)
+  Widget _buildExpiringSection(
+    BuildContext context,
+    WidgetRef ref,
+    AsyncValue<List<ExpiringLease>> expiringAsync,
+  ) {
+    return expiringAsync.when(
+      data: (expiringLeases) => ExpiringLeasesSection(
+        expiringLeases: expiringLeases,
+        onItemTap: (lease) => context.push('/leases/${lease.leaseId}'),
+      ),
+      loading: () => const ExpiringLeasesSectionLoading(),
+      error: (error, _) => ExpiringLeasesSectionError(
+        message: error.toString(),
+        onRetry: () => ref.invalidate(expiringLeasesProvider),
       ),
     );
   }
@@ -278,21 +318,6 @@ class DashboardPage extends ConsumerWidget {
         icon: Icons.manage_accounts,
         label: 'Gerer les utilisateurs',
         onTap: () => context.go(AppRoutes.userManagement),
-      ));
-    }
-
-    // Reports (gestionnaire and admin)
-    if (user?.canGenerateReports ?? false) {
-      actions.add(_buildActionCard(
-        context,
-        icon: Icons.assessment,
-        label: 'Rapports',
-        onTap: () {
-          // TODO: Navigate to reports
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Fonctionnalite a venir')),
-          );
-        },
       ));
     }
 
