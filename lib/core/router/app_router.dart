@@ -25,6 +25,7 @@ import '../../presentation/pages/leases/lease_form_page.dart';
 import '../../presentation/pages/leases/lease_detail_page.dart';
 import '../../presentation/pages/leases/lease_edit_page.dart';
 import '../../presentation/pages/payments/payments_page.dart';
+import '../../presentation/pages/receipts/receipt_preview_page.dart';
 
 /// Route paths
 class AppRoutes {
@@ -62,6 +63,10 @@ class AppRoutes {
 
   // Payments routes
   static const String payments = '/payments';
+
+  // Receipts routes
+  static const String receiptPreview = '/receipts/preview/:paymentId';
+  static const String receiptHistory = '/receipts/history/:tenantId';
 }
 
 /// GoRouter provider with auth redirect logic
@@ -259,6 +264,16 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.payments,
         name: 'payments',
         builder: (context, state) => const PaymentsPage(),
+      ),
+
+      // Receipts routes
+      GoRoute(
+        path: AppRoutes.receiptPreview,
+        name: 'receipt-preview',
+        builder: (context, state) {
+          final paymentId = state.pathParameters['paymentId']!;
+          return ReceiptPreviewPage(paymentId: paymentId);
+        },
       ),
 
       // Root redirect

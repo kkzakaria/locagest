@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../domain/entities/payment.dart';
 import '../../pages/payments/payment_edit_modal.dart';
 import '../../providers/payments_provider.dart';
+import '../receipts/generate_receipt_button.dart';
 
 /// Widget displaying payment history for a rent schedule
 class PaymentHistoryList extends ConsumerWidget {
@@ -142,7 +143,7 @@ class PaymentHistoryList extends ConsumerWidget {
 }
 
 /// Individual payment tile with edit/delete actions
-class _PaymentTile extends StatelessWidget {
+class _PaymentTile extends ConsumerWidget {
   final Payment payment;
   final bool canManage;
   final bool compact;
@@ -156,7 +157,7 @@ class _PaymentTile extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
@@ -198,9 +199,9 @@ class _PaymentTile extends StatelessWidget {
                     ),
                   ),
                   // Edit/Delete actions (only for admin/gestionnaire)
-                  if (canManage && !compact) ...[
+                  if (!compact) ...[
                     const SizedBox(width: 8),
-                    _buildActionMenu(context),
+                    _buildActionMenu(context, ref),
                   ],
                 ],
               ),
@@ -318,41 +319,102 @@ class _PaymentTile extends StatelessWidget {
     );
   }
 
-  Widget _buildActionMenu(BuildContext context) {
+  Widget _buildActionMenu(BuildContext context, WidgetRef ref) {
     return PopupMenuButton<String>(
       icon: Icon(Icons.more_vert, size: 20, color: Colors.grey[600]),
       padding: EdgeInsets.zero,
       constraints: const BoxConstraints(),
       onSelected: (value) {
         switch (value) {
+          case 'receipt':
+            _generateReceipt(context, ref);
+            break;
           case 'edit':
-            _showEditModal(context);
+            if (canManage) _showEditModal(context);
             break;
           case 'delete':
-            _confirmDelete(context);
+            if (canManage) _confirmDelete(context);
             break;
         }
       },
       itemBuilder: (context) => [
+        // Generate receipt - always available
         const PopupMenuItem(
-          value: 'edit',
+          value: 'receipt',
           child: ListTile(
-            leading: Icon(Icons.edit, size: 20),
-            title: Text('Modifier'),
+            leading: Icon(Icons.receipt_long, size: 20),
+            title: Text('Generer quittance'),
             contentPadding: EdgeInsets.zero,
             dense: true,
           ),
         ),
-        PopupMenuItem(
-          value: 'delete',
-          child: ListTile(
-            leading: Icon(Icons.delete, size: 20, color: Colors.red[400]),
-            title: Text('Supprimer', style: TextStyle(color: Colors.red[400])),
-            contentPadding: EdgeInsets.zero,
-            dense: true,
+        // Edit/delete only for managers
+        if (canManage) ...[
+          const PopupMenuItem(
+            value: 'edit',
+            child: ListTile(
+              leading: Icon(Icons.edit, size: 20),
+              title: Text('Modifier'),
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+            ),
           ),
-        ),
+          PopupMenuItem(
+            value: 'delete',
+            child: ListTile(
+              leading: Icon(Icons.delete, size: 20, color: Colors.red[400]),
+              title: Text('Supprimer', style: TextStyle(color: Colors.red[400])),
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+            ),
+          ),
+        ],
       ],
+    );
+  }
+
+  void _generateReceipt(BuildContext context, WidgetRef ref) {
+    // Show a dialog with the generate receipt button
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Row(
+          children: [
+            const Icon(Icons.receipt_long),
+            const SizedBox(width: 12),
+            const Expanded(child: Text('Generer une quittance')),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Paiement du ${payment.paymentDateFormatted}'),
+            const SizedBox(height: 8),
+            Text(
+              payment.amountFormatted,
+              style: Theme.of(dialogContext).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Une quittance PDF sera generee pour ce paiement.',
+              style: TextStyle(color: Colors.grey),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Annuler'),
+          ),
+          GenerateReceiptButton(
+            paymentId: payment.id,
+            onSuccess: () {
+              Navigator.pop(dialogContext);
+            },
+          ),
+        ],
+      ),
     );
   }
 

@@ -8,6 +8,7 @@ import '../../providers/tenants_provider.dart';
 import '../../widgets/tenants/tenant_status_badge.dart';
 import '../../widgets/tenants/lease_history_section.dart';
 import '../../widgets/payments/tenant_payments_summary_card.dart';
+import '../../widgets/receipts/receipt_list_item.dart';
 
 /// Page displaying full tenant details including personal info, professional info,
 /// ID documents, guarantor information, and lease history
@@ -171,6 +172,11 @@ class TenantDetailPage extends ConsumerWidget {
 
           const SizedBox(height: 24),
 
+          // Receipts section
+          _buildReceiptsSection(context, ref),
+
+          const SizedBox(height: 24),
+
           // Lease history section
           LeaseHistorySection(tenantId: tenantId),
 
@@ -187,6 +193,39 @@ class TenantDetailPage extends ConsumerWidget {
           const SizedBox(height: 24),
         ],
       ),
+    );
+  }
+
+  Widget _buildReceiptsSection(BuildContext context, WidgetRef ref) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(Icons.picture_as_pdf, color: Theme.of(context).primaryColor, size: 20),
+            const SizedBox(width: 8),
+            Text(
+              'Quittances',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Card(
+          elevation: 1,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: TenantReceiptsList(
+              tenantId: tenantId,
+              showHeader: false,
+              limit: 5, // Show only last 5 receipts by default
+            ),
+          ),
+        ),
+      ],
     );
   }
 

@@ -20,9 +20,23 @@ class PaymentRepositoryImpl implements PaymentRepository {
   }
 
   @override
-  Future<Payment> getPaymentById(String id) async {
-    final model = await _datasource.getPaymentById(id);
-    return model.toEntity();
+  Future<Payment?> getPaymentById(String id) async {
+    try {
+      final model = await _datasource.getPaymentById(id);
+      return model.toEntity();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  @override
+  Future<RentSchedule?> getRentScheduleById(String id) async {
+    try {
+      final model = await _datasource.getRentScheduleById(id);
+      return model.toEntity();
+    } catch (_) {
+      return null;
+    }
   }
 
   @override

@@ -2,6 +2,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../core/errors/payment_exceptions.dart';
 import '../../domain/repositories/payment_repository.dart';
 import '../models/payment_model.dart';
+import '../models/rent_schedule_model.dart';
 
 /// Remote datasource for payment operations via Supabase
 class PaymentRemoteDatasource {
@@ -52,6 +53,26 @@ class PaymentRemoteDatasource {
           .single();
 
       return PaymentModel.fromJson(response);
+    } on PostgrestException catch (e) {
+      if (e.code == 'PGRST116') {
+        throw const PaymentNotFoundException();
+      } else if (e.code == '42501') {
+        throw const PaymentUnauthorizedException();
+      }
+      throw PaymentValidationException(e.message);
+    }
+  }
+
+  /// Get a rent schedule by ID
+  Future<RentScheduleModel> getRentScheduleById(String id) async {
+    try {
+      final response = await _supabase
+          .from('rent_schedules')
+          .select()
+          .eq('id', id)
+          .single();
+
+      return RentScheduleModel.fromJson(response);
     } on PostgrestException catch (e) {
       if (e.code == 'PGRST116') {
         throw const PaymentNotFoundException();
