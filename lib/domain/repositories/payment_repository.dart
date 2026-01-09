@@ -124,7 +124,10 @@ abstract class PaymentRepository {
   Future<Payment> createPayment(CreatePaymentInput input);
 
   /// Get a payment by ID
-  Future<Payment> getPaymentById(String id);
+  Future<Payment?> getPaymentById(String id);
+
+  /// Get a rent schedule by ID
+  Future<RentSchedule?> getRentScheduleById(String id);
 
   /// Update an existing payment
   Future<Payment> updatePayment(String id, UpdatePaymentInput input);

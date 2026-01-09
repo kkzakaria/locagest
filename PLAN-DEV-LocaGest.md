@@ -490,23 +490,37 @@
 
 ---
 
-## Phase 9 : Génération de Quittances PDF
+## Phase 9 : Génération de Quittances PDF ✅ TERMINÉE
 
 ### 9.1 Service PDF
-- [ ] 🔴 Créer `lib/core/services/pdf_service.dart`
-- [ ] 🔴 Template quittance de loyer
+- [X] 🔴 Créer `lib/presentation/services/pdf_receipt_service.dart`
+- [X] 🔴 Template quittance de loyer (header, bailleur, locataire, détails paiement, footer)
 
 ### 9.2 Implémentation
-- [ ] 🔴 Génération du PDF avec package `pdf`
-- [ ] 🔴 Prévisualisation avec `printing`
-- [ ] 🔴 Téléchargement
+- [X] 🔴 Génération du PDF avec package `pdf`
+- [X] 🔴 Prévisualisation avec `printing` (PdfPreview)
+- [X] 🔴 Téléchargement et impression
 
 ### 9.3 Intégration
-- [ ] 🔴 Bouton "Générer quittance" après paiement
-- [ ] 🟡 Sauvegarde dans Supabase Storage
-- [ ] 🟡 Partage (email, WhatsApp)
+- [X] 🔴 Bouton "Générer quittance" après paiement
+- [X] 🟡 Sauvegarde dans Supabase Storage (bucket documents)
+- [X] 🟡 Partage via share_plus (mobile) / download (web)
 
-**✅ Checkpoint Phase 9 :** Quittances PDF générées
+### 9.4 Fonctionnalités supplémentaires implémentées
+- [X] Migration SQL receipts table avec RLS policies
+- [X] Entity Receipt et ReceiptModel (Freezed)
+- [X] ReceiptRepository et ReceiptRemoteDatasource
+- [X] ReceiptData et ReceiptDataBuilder pour construction des données
+- [X] GenerateReceiptNotifier pour state management
+- [X] ReceiptPreviewPage et ReceiptPreviewDialog
+- [X] ReceiptListItem, LeaseReceiptsList, TenantReceiptsList widgets
+- [X] Section Quittances dans détail bail et fiche locataire
+- [X] Numéro de reçu auto-généré (QUI-AAAAMM-XXXX)
+- [X] Gestion paiements partiels (notice ACOMPTE)
+- [X] Localisation française complète
+- [X] Tests Playwright validés
+
+**✅ Checkpoint Phase 9 :** Quittances PDF générées ✔️
 
 ---
 
@@ -658,7 +672,7 @@
 
 | Sprint | Phases | Durée | Statut | Progression |
 |--------|--------|-------|--------|-------------|
-| Sprint 1 - MVP | 1-11 | 2 semaines | 🔄 En cours | ████████░░ 75% |
+| Sprint 1 - MVP | 1-11 | 2 semaines | 🔄 En cours | █████████░ 85% |
 | Sprint 2 - États des lieux | 12 | 1 semaine | ⏳ À venir | ░░░░░░░░░░ 0% |
 | Sprint 3 - Rapports | 13-16 | 1 semaine | ⏳ À venir | ░░░░░░░░░░ 0% |
 | Sprint 4 - Évolutions | 17-19 | TBD | ⏳ Backlog | ░░░░░░░░░░ 0% |
@@ -671,7 +685,7 @@
 - [X] CRUD Locataires
 - [X] CRUD Baux avec génération échéances
 - [X] Enregistrement paiements
-- [ ] Génération quittances PDF
+- [X] Génération quittances PDF
 - [ ] Dashboard avec KPIs
 - [ ] Tests validés
 
@@ -687,7 +701,7 @@
 | 6 | Module Locataires | ✅ |
 | 7 | Module Baux | ✅ |
 | 8 | Paiements | ✅ |
-| 9 | Quittances PDF | ⬜ |
+| 9 | Quittances PDF | ✅ |
 | 10 | Dashboard | ⬜ |
 | 11 | Tests & Corrections | ⬜ |
 | 12 | États des lieux | ⬜ |
@@ -709,6 +723,7 @@
 | 2026-01-08 | Phase 6 | Module Locataires complet | Bug null check corrigé | CRUD complet, upload documents, validation téléphone CI, tests Playwright |
 | 2026-01-08 | Phase 7 | Module Baux complet | Bug DatePicker + rent_schedules corrigés | CRUD complet, sélection 2 étapes, génération échéances, tests Playwright |
 | 2026-01-08 | Phase 8 | Module Paiements complet | Aucun | 73 tâches (6 user stories), page paiements, filtres, impayés, edit/delete, historique locataire, tests Playwright |
+| 2026-01-09 | Phase 9 | Quittances PDF complet | Aucun | 50 tâches (5 user stories), génération PDF, prévisualisation, partage, sauvegarde cloud, historique par bail/locataire, tests Playwright |
 
 ---
 
@@ -747,4 +762,4 @@ flutter build web --release
 
 ---
 
-*Dernière mise à jour : 8 Janvier 2026 - Phase 8 (Paiements) terminée*
+*Dernière mise à jour : 9 Janvier 2026 - Phase 9 (Quittances PDF) terminée*

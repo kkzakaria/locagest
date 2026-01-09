@@ -9,6 +9,7 @@ import '../../../domain/entities/rent_schedule.dart';
 import '../../providers/leases_provider.dart';
 import '../../widgets/leases/lease_status_badge.dart';
 import '../../widgets/payments/payment_history_list.dart';
+import '../../widgets/receipts/receipt_list_item.dart';
 import '../payments/payment_form_modal.dart';
 
 /// Page displaying full lease details including tenant, unit, amounts,
@@ -436,8 +437,45 @@ class LeaseDetailPage extends ConsumerWidget {
 
           // Rent schedules section
           _buildRentSchedulesSection(context, ref),
+
+          const SizedBox(height: 24),
+
+          // Receipts section
+          _buildReceiptsSection(context, ref),
         ],
       ),
+    );
+  }
+
+  Widget _buildReceiptsSection(BuildContext context, WidgetRef ref) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(Icons.picture_as_pdf, color: Theme.of(context).primaryColor, size: 20),
+            const SizedBox(width: 8),
+            Text(
+              'Quittances',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Card(
+          elevation: 1,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: LeaseReceiptsList(
+              leaseId: leaseId,
+              showHeader: false,
+            ),
+          ),
+        ),
+      ],
     );
   }
 

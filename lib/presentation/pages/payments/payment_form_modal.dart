@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../../domain/entities/payment.dart';
 import '../../../domain/entities/rent_schedule.dart';
 import '../../providers/payments_provider.dart';
+import '../../widgets/receipts/generate_receipt_button.dart';
 
 /// Modal bottom sheet for recording a new payment
 class PaymentFormModal extends ConsumerStatefulWidget {
@@ -470,20 +471,57 @@ class _PaymentFormModalState extends ConsumerState<PaymentFormModal> {
       // Reset the provider state
       ref.read(createPaymentProvider.notifier).reset();
 
-      // Show success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Paiement enregistré - Reçu: ${payment.receiptNumber}'),
-          backgroundColor: Colors.green,
-          duration: const Duration(seconds: 4),
-        ),
-      );
-
-      // Close modal
+      // Close modal first
       Navigator.pop(context);
 
       // Notify callback
       widget.onPaymentCreated?.call();
+
+      // Show success dialog with receipt generation option
+      if (context.mounted) {
+        _showPaymentSuccessDialog(context, payment);
+      }
     }
+  }
+
+  void _showPaymentSuccessDialog(BuildContext context, Payment payment) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        icon: const Icon(Icons.check_circle, color: Colors.green, size: 48),
+        title: const Text('Paiement enregistre'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Recu N° ${payment.receiptNumber}',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              payment.amountFormatted,
+              style: Theme.of(dialogContext).textTheme.headlineSmall,
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Voulez-vous generer une quittance PDF ?',
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Plus tard'),
+          ),
+          GenerateReceiptButton(
+            paymentId: payment.id,
+            onSuccess: () {
+              Navigator.pop(dialogContext);
+            },
+          ),
+        ],
+      ),
+    );
   }
 }
