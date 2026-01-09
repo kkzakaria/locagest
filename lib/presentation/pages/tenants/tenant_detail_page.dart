@@ -7,6 +7,7 @@ import '../../../domain/entities/tenant.dart';
 import '../../providers/tenants_provider.dart';
 import '../../widgets/tenants/tenant_status_badge.dart';
 import '../../widgets/tenants/lease_history_section.dart';
+import '../../widgets/payments/tenant_payments_summary_card.dart';
 
 /// Page displaying full tenant details including personal info, professional info,
 /// ID documents, guarantor information, and lease history
@@ -161,6 +162,14 @@ class TenantDetailPage extends ConsumerWidget {
               ),
               const SizedBox(height: 24),
             ],
+
+          // Payment history section
+          TenantPaymentsSummaryCard(
+            tenantId: tenantId,
+            tenantName: tenant.fullName,
+          ),
+
+          const SizedBox(height: 24),
 
           // Lease history section
           LeaseHistorySection(tenantId: tenantId),

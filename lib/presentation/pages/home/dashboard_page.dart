@@ -255,6 +255,22 @@ class DashboardPage extends ConsumerWidget {
       onTap: () => context.push(AppRoutes.tenants),
     ));
 
+    // View leases (all users)
+    actions.add(_buildActionCard(
+      context,
+      icon: Icons.description,
+      label: 'Voir les baux',
+      onTap: () => context.push(AppRoutes.leases),
+    ));
+
+    // View payments (all users)
+    actions.add(_buildActionCard(
+      context,
+      icon: Icons.payments,
+      label: 'Paiements',
+      onTap: () => context.push(AppRoutes.payments),
+    ));
+
     // User management (admin only)
     if (user?.canManageUsers ?? false) {
       actions.add(_buildActionCard(
