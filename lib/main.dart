@@ -10,8 +10,10 @@ import 'core/router/app_router.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Load environment variables
-  await dotenv.load(fileName: '.env');
+  // Load environment variables based on flavor
+  const environment = String.fromEnvironment('ENV', defaultValue: 'dev');
+  final envFile = environment == 'prod' ? '.env.production' : '.env';
+  await dotenv.load(fileName: envFile);
 
   // Initialize Supabase
   await Supabase.initialize(
