@@ -16,17 +16,29 @@ class AuthHeader extends StatelessWidget {
     return Column(
       children: [
         // App logo/icon
-        Container(
-          width: 80,
-          height: 80,
-          decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: const Icon(
-            Icons.home_work_rounded,
-            size: 48,
-            color: Colors.white,
+        ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Image.asset(
+            'assets/icon/app_icon.png',
+            width: 80,
+            height: 80,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              // Fallback si l'image ne charge pas
+              return Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Icon(
+                  Icons.home_work_rounded,
+                  size: 48,
+                  color: Colors.white,
+                ),
+              );
+            },
           ),
         ),
         const SizedBox(height: 24),
