@@ -27,7 +27,7 @@ class ExpiringLeaseCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: expiringLease.urgencyColor.withOpacity(0.1),
+                  color: expiringLease.urgencyColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -86,7 +86,7 @@ class ExpiringLeaseCard extends StatelessWidget {
                       vertical: 2,
                     ),
                     decoration: BoxDecoration(
-                      color: expiringLease.urgencyColor.withOpacity(0.1),
+                      color: expiringLease.urgencyColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(

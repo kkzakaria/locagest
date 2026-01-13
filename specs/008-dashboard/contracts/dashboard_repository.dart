@@ -1,14 +1,14 @@
-/// Dashboard Repository Interface
-///
-/// Defines the contract for dashboard data operations.
-/// This is the Domain layer interface - implementations in Data layer.
-///
-/// Feature: 008-dashboard
-/// Date: 2026-01-09
+// Dashboard Repository Interface
+//
+// Defines the contract for dashboard data operations.
+// This is the Domain layer interface - implementations in Data layer.
+//
+// Feature: 008-dashboard
+// Date: 2026-01-09
 
-import '../../../lib/domain/entities/dashboard_stats.dart';
-import '../../../lib/domain/entities/overdue_rent.dart';
-import '../../../lib/domain/entities/expiring_lease.dart';
+import 'package:locagest/domain/entities/dashboard_stats.dart';
+import 'package:locagest/domain/entities/overdue_rent.dart';
+import 'package:locagest/domain/entities/expiring_lease.dart';
 
 /// Dashboard repository interface (Domain layer)
 /// Defines the contract for dashboard aggregate queries
@@ -176,6 +176,5 @@ class DashboardException implements Exception {
 
 /// Exception when dashboard data fails to load
 class DashboardLoadException extends DashboardException {
-  const DashboardLoadException(String message, [dynamic originalError])
-      : super(message, originalError);
+  const DashboardLoadException(super.message, [super.originalError]);
 }

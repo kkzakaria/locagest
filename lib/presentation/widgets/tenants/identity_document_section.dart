@@ -235,7 +235,7 @@ class _IdentityDocumentSectionState extends State<IdentityDocumentSection> {
 
           // ID Type dropdown
           DropdownButtonFormField<IdDocumentType>(
-            value: widget.idType,
+            initialValue: widget.idType,
             decoration: const InputDecoration(
               labelText: 'Type de piece',
               prefixIcon: Icon(Icons.credit_card),
