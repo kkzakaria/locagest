@@ -138,3 +138,27 @@ class ServerException extends AppAuthException {
   @override
   String get messageFr => 'Une erreur est survenue. Veuillez reessayer';
 }
+
+/// Invalid OTP code
+class InvalidOtpException extends AppAuthException {
+  const InvalidOtpException();
+
+  @override
+  String get messageFr => 'Code invalide. Veuillez verifier et reessayer';
+}
+
+/// OTP code has expired
+class OtpExpiredException extends AppAuthException {
+  const OtpExpiredException();
+
+  @override
+  String get messageFr => 'Code expire. Veuillez demander un nouveau code';
+}
+
+/// Email already confirmed (user trying to verify again)
+class EmailAlreadyConfirmedException extends AppAuthException {
+  const EmailAlreadyConfirmedException();
+
+  @override
+  String get messageFr => 'Cette adresse email est deja verifiee';
+}

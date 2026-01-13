@@ -64,7 +64,16 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
           fullName: _fullNameController.text.trim(),
         );
 
-    // Navigation is handled by GoRouter redirect (auto-login after registration)
+    // Check if widget is still mounted
+    if (!mounted) return;
+
+    // Check if signup was successful (no error)
+    final error = ref.read(authProvider).value?.error;
+    if (error == null) {
+      // Redirect to OTP verification page
+      final email = Uri.encodeComponent(_emailController.text.trim());
+      context.go('${AppRoutes.otpVerification}?email=$email&type=signup');
+    }
   }
 
   @override

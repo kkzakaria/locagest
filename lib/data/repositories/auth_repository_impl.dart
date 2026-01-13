@@ -1,4 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
+import 'package:supabase_flutter/supabase_flutter.dart' show OtpType;
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../core/utils/secure_storage.dart';
@@ -143,5 +144,64 @@ class AuthRepositoryImpl implements AuthRepository {
   /// Clear the cached user (useful for testing or forced refresh)
   void clearCache() {
     _cachedUser = null;
+  }
+
+  @override
+  Future<User?> verifyOtp({
+    required String type,
+    required String email,
+    required String token,
+  }) async {
+    final otpType = _stringToOtpType(type);
+    final response = await _remoteDatasource.verifyOtp(
+      type: otpType,
+      email: email,
+      token: token,
+    );
+
+    // If verification succeeded and we have a user, get their profile
+    if (response.user != null) {
+      final userModel = await _remoteDatasource.getCurrentUser();
+      if (userModel != null) {
+        _cachedUser = userModel.toEntity();
+        await SecureStorage.saveUserId(_cachedUser!.id);
+        return _cachedUser;
+      }
+    }
+
+    return null;
+  }
+
+  @override
+  Future<void> resendOtp({
+    required String type,
+    required String email,
+  }) async {
+    final otpType = _stringToOtpType(type);
+    await _remoteDatasource.resendOtp(
+      type: otpType,
+      email: email,
+    );
+  }
+
+  @override
+  Future<void> requestEmailChange({required String newEmail}) async {
+    await _remoteDatasource.requestEmailChange(newEmail: newEmail);
+  }
+
+  /// Convert string type to OtpType enum
+  OtpType _stringToOtpType(String type) {
+    switch (type) {
+      case 'signup':
+        return OtpType.signup;
+      case 'recovery':
+        return OtpType.recovery;
+      case 'email_change':
+        return OtpType.emailChange;
+      case 'email':
+        return OtpType.email;
+      default:
+        return OtpType.email;
+    }
   }
 }

@@ -44,9 +44,9 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
     // Check if request was successful (no error)
     final error = ref.read(authProvider).value?.error;
     if (error == null) {
-      setState(() {
-        _emailSent = true;
-      });
+      // Redirect to OTP verification page
+      final email = Uri.encodeComponent(_emailController.text.trim());
+      context.go('${AppRoutes.otpVerification}?email=$email&type=recovery');
     }
   }
 
