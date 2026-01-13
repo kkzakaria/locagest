@@ -41,9 +41,9 @@ class DashboardLoadException extends DashboardException {
 /// Exception when user is not authorized to view dashboard
 class DashboardUnauthorizedException extends DashboardException {
   const DashboardUnauthorizedException([
-    String message = 'Vous n\'etes pas autorise a acceder au tableau de bord',
-    dynamic originalError,
-  ]) : super(message, originalError);
+    super.message = 'Vous n\'etes pas autorise a acceder au tableau de bord',
+    super.originalError,
+  ]);
 }
 
 /// Exception when dashboard data is in an invalid state

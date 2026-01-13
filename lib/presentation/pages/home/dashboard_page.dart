@@ -175,7 +175,7 @@ class DashboardPage extends ConsumerWidget {
                   occupiedUnits: stats.occupiedUnitsCount,
                 ),
                 loading: () => const OccupancyRateWidgetLoading(),
-                error: (_, __) => const SizedBox.shrink(),
+                error: (_, _) => const SizedBox.shrink(),
               ),
 
               const SizedBox(height: 24),

@@ -27,7 +27,7 @@ class OverdueRentCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: _getSeverityColor().withOpacity(0.1),
+                  color: _getSeverityColor().withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -84,7 +84,7 @@ class OverdueRentCard extends StatelessWidget {
                       vertical: 2,
                     ),
                     decoration: BoxDecoration(
-                      color: _getSeverityColor().withOpacity(0.1),
+                      color: _getSeverityColor().withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(

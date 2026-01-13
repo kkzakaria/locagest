@@ -1,10 +1,10 @@
-/// Payment Repository Interface Contract
-///
-/// This file defines the contract for the payment repository.
-/// Implementation will be in lib/data/repositories/payment_repository_impl.dart
-///
-/// Feature: 006-payment-management
-/// Date: 2026-01-08
+// Payment Repository Interface Contract
+//
+// This file defines the contract for the payment repository.
+// Implementation will be in lib/data/repositories/payment_repository_impl.dart
+//
+// Feature: 006-payment-management
+// Date: 2026-01-08
 
 // =============================================================================
 // ENTITIES (Domain Layer)

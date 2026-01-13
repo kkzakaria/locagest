@@ -784,7 +784,7 @@ class _LeaseFormState extends ConsumerState<LeaseForm> {
       children: [
         // Payment day
         DropdownButtonFormField<int>(
-          value: _paymentDay,
+          initialValue: _paymentDay,
           decoration: const InputDecoration(
             labelText: 'Jour de paiement',
             prefixIcon: Icon(Icons.calendar_month),
@@ -1005,7 +1005,7 @@ class _UnitDropdownState extends ConsumerState<_UnitDropdown> {
       children: [
         // Building selection
         DropdownButtonFormField<Building>(
-          value: _selectedBuilding,
+          initialValue: _selectedBuilding,
           decoration: const InputDecoration(
             labelText: 'Immeuble *',
             prefixIcon: Icon(Icons.business),
@@ -1057,7 +1057,7 @@ class _UnitDropdownState extends ConsumerState<_UnitDropdown> {
             )
           else
             DropdownButtonFormField<Unit>(
-              value: widget.selectedUnit,
+              initialValue: widget.selectedUnit,
               decoration: const InputDecoration(
                 labelText: 'Lot *',
                 prefixIcon: Icon(Icons.home),
@@ -1145,7 +1145,7 @@ class _TenantDropdownState extends ConsumerState<_TenantDropdown> {
     }
 
     return DropdownButtonFormField<Tenant>(
-      value: widget.selectedTenant,
+      initialValue: widget.selectedTenant,
       decoration: const InputDecoration(
         labelText: 'Selectionner un locataire *',
         prefixIcon: Icon(Icons.person),
