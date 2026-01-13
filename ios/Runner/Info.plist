@@ -45,5 +45,14 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<!-- Camera permission for taking photos of buildings, units, and inventory reports -->
+	<key>NSCameraUsageDescription</key>
+	<string>LocaGest a besoin d'accéder à votre caméra pour prendre des photos des immeubles, lots et états des lieux.</string>
+	<!-- Photo library read permission for selecting existing photos -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>LocaGest a besoin d'accéder à votre galerie pour sélectionner des photos de vos biens immobiliers.</string>
+	<!-- Photo library write permission for saving photos -->
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>LocaGest a besoin de sauvegarder des photos dans votre galerie.</string>
 </dict>
 </plist>

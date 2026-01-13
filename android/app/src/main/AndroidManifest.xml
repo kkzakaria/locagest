@@ -1,4 +1,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Network access for Supabase (database, auth, storage) -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- Camera for taking photos of buildings, units, and inventory reports -->
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <!-- Storage access for image_picker and file_picker (Android < 13) -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>
+
+    <!-- Media access for Android 13+ -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+
     <application
         android:label="LocaGest"
         android:name="${applicationName}"
