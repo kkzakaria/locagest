@@ -52,7 +52,8 @@ class LocaGestApp extends ConsumerWidget {
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF1E88E5), // Blue primary color
+          seedColor: const Color(0xFF1591DC), // Bleu vif primary
+          secondary: const Color(0xFFF5A623), // Orange accent
           brightness: Brightness.light,
         ),
         inputDecorationTheme: InputDecorationTheme(
@@ -68,7 +69,7 @@ class LocaGestApp extends ConsumerWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: Color(0xFF1E88E5), width: 2),
+            borderSide: const BorderSide(color: Color(0xFF1591DC), width: 2),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),

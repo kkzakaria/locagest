@@ -28,7 +28,25 @@ class DashboardPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('LocaGest'),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.asset(
+                'assets/icon/app_icon.png',
+                width: 32,
+                height: 32,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return const SizedBox(width: 32, height: 32);
+                },
+              ),
+            ),
+            const SizedBox(width: 12),
+            const Text('LocaGest'),
+          ],
+        ),
         actions: [
           // User menu
           PopupMenuButton<String>(
