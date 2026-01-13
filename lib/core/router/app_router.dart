@@ -26,6 +26,8 @@ import '../../presentation/pages/leases/lease_detail_page.dart';
 import '../../presentation/pages/leases/lease_edit_page.dart';
 import '../../presentation/pages/payments/payments_page.dart';
 import '../../presentation/pages/receipts/receipt_preview_page.dart';
+import '../../presentation/pages/auth/otp_verification_page.dart';
+import '../../presentation/pages/profile/profile_page.dart';
 import '../../presentation/widgets/dashboard/main_navigation_shell.dart';
 
 /// Route paths
@@ -36,7 +38,9 @@ class AppRoutes {
   static const String register = '/auth/register';
   static const String forgotPassword = '/auth/forgot-password';
   static const String resetPassword = '/auth/reset-password';
+  static const String otpVerification = '/auth/otp-verification';
   static const String dashboard = '/dashboard';
+  static const String profile = '/profile';
   static const String userManagement = '/settings/users';
 
   // Buildings routes
@@ -90,8 +94,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       final isAuthRoute = state.matchedLocation.startsWith('/auth');
       final isResetPassword = state.matchedLocation == AppRoutes.resetPassword;
 
-      // Allow reset password page access even when authenticated (from deep link)
-      if (isResetPassword) {
+      // Allow reset password and OTP pages access even when authenticated
+      final isOtpPage = state.matchedLocation.startsWith(AppRoutes.otpVerification);
+      if (isResetPassword || isOtpPage) {
         return null;
       }
 
@@ -129,6 +134,20 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: 'reset-password',
         builder: (context, state) => const ResetPasswordPage(),
       ),
+      GoRoute(
+        path: AppRoutes.otpVerification,
+        name: 'otp-verification',
+        builder: (context, state) {
+          final email = state.uri.queryParameters['email'] ?? '';
+          final type = state.uri.queryParameters['type'] ?? 'signup';
+          final redirect = state.uri.queryParameters['redirect'];
+          return OtpVerificationPage(
+            email: email,
+            otpType: type,
+            redirectTo: redirect,
+          );
+        },
+      ),
 
       // Main app routes with bottom navigation (T062-T063)
       ShellRoute(
@@ -162,6 +181,13 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
 
       // Detail routes outside shell (no bottom nav on detail pages - T064)
+      // Profile route
+      GoRoute(
+        path: AppRoutes.profile,
+        name: 'profile',
+        builder: (context, state) => const ProfilePage(),
+      ),
+
       // Settings routes
       GoRoute(
         path: AppRoutes.userManagement,

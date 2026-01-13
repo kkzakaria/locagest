@@ -50,6 +50,29 @@ abstract class AuthRemoteDatasource {
 
   /// Stream of auth state changes
   Stream<AuthState> get authStateChanges;
+
+  /// Verify OTP code for signup, recovery, or email change
+  /// Returns AuthResponse with session on success
+  /// Throws [InvalidOtpException] if code is invalid
+  /// Throws [OtpExpiredException] if code has expired
+  Future<AuthResponse> verifyOtp({
+    required OtpType type,
+    required String email,
+    required String token,
+  });
+
+  /// Resend OTP code for signup or email change
+  /// For recovery, use resetPasswordForEmail instead
+  /// Throws [TooManyRequestsException] if rate limited
+  Future<void> resendOtp({
+    required OtpType type,
+    required String email,
+  });
+
+  /// Request email change for current user
+  /// Sends OTP to the new email address
+  /// Throws [EmailAlreadyInUseException] if email is taken
+  Future<void> requestEmailChange({required String newEmail});
 }
 
 /// Implementation of AuthRemoteDatasource using Supabase
@@ -305,6 +328,84 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
       );
     } catch (_) {
       // Silent fail - don't want to mask the original error
+    }
+  }
+
+  @override
+  Future<AuthResponse> verifyOtp({
+    required OtpType type,
+    required String email,
+    required String token,
+  }) async {
+    try {
+      final response = await _supabaseClient.auth.verifyOTP(
+        type: type,
+        email: email,
+        token: token,
+      );
+      return response;
+    } on AuthException catch (e) {
+      if (e.message.contains('expired') || e.message.contains('Token has expired')) {
+        throw const app_errors.OtpExpiredException();
+      }
+      if (e.message.contains('invalid') || e.message.contains('Invalid')) {
+        throw const app_errors.InvalidOtpException();
+      }
+      throw app_errors.NetworkException(message: e.message);
+    } catch (e) {
+      if (e is app_errors.OtpExpiredException || e is app_errors.InvalidOtpException) {
+        rethrow;
+      }
+      throw app_errors.NetworkException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<void> resendOtp({
+    required OtpType type,
+    required String email,
+  }) async {
+    try {
+      // For recovery, use resetPasswordForEmail
+      if (type == OtpType.recovery) {
+        await _supabaseClient.auth.resetPasswordForEmail(email);
+        return;
+      }
+
+      // For signup and email_change, use resend
+      await _supabaseClient.auth.resend(
+        type: type,
+        email: email,
+      );
+    } on AuthException catch (e) {
+      if (e.message.contains('rate') || e.message.contains('Too many')) {
+        throw const app_errors.TooManyRequestsException();
+      }
+      throw app_errors.NetworkException(message: e.message);
+    } catch (e) {
+      if (e is app_errors.TooManyRequestsException) {
+        rethrow;
+      }
+      throw app_errors.NetworkException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<void> requestEmailChange({required String newEmail}) async {
+    try {
+      await _supabaseClient.auth.updateUser(
+        UserAttributes(email: newEmail),
+      );
+    } on AuthException catch (e) {
+      if (e.message.contains('already') || e.message.contains('exists')) {
+        throw const app_errors.EmailAlreadyInUseException();
+      }
+      throw app_errors.NetworkException(message: e.message);
+    } catch (e) {
+      if (e is app_errors.EmailAlreadyInUseException) {
+        rethrow;
+      }
+      throw app_errors.NetworkException(message: e.toString());
     }
   }
 }

@@ -25,4 +25,9 @@ class AppConstants {
   // Deep link schemes
   static const String appScheme = 'locagest';
   static const String resetPasswordPath = 'reset-password';
+
+  // OTP configuration
+  static const int otpLength = 6;
+  static const int otpResendDelaySeconds = 60;
+  static const int otpExpiryMinutes = 60;
 }

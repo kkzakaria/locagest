@@ -77,6 +77,9 @@ dependencies:
   # File system access
   path_provider: ^2.1.2
 
+  # OTP input field
+  pin_code_fields: ^8.0.1
+
   # URL launching
   url_launcher: ^6.2.5
 

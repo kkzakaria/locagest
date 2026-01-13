@@ -269,6 +269,123 @@ class AuthNotifier extends AsyncNotifier<AuthState> {
       // Silent fail on refresh
     }
   }
+
+  /// Verify OTP code for signup, recovery, or email change
+  Future<domain.User?> verifyOtp({
+    required String type,
+    required String email,
+    required String token,
+  }) async {
+    state = AsyncValue.data(
+      state.value?.copyWith(isLoading: true, clearError: true) ??
+          const AuthState(isLoading: true),
+    );
+
+    try {
+      final repository = ref.read(authRepositoryProvider);
+      final user = await repository.verifyOtp(
+        type: type,
+        email: email,
+        token: token,
+      );
+
+      state = AsyncValue.data(AuthState(
+        user: user,
+        isInitialized: true,
+      ));
+
+      return user;
+    } on app_errors.AppAuthException catch (e) {
+      state = AsyncValue.data(AuthState(
+        user: state.value?.user,
+        error: e,
+        isInitialized: true,
+      ));
+      return null;
+    } catch (e) {
+      state = AsyncValue.data(AuthState(
+        user: state.value?.user,
+        error: app_errors.NetworkException(message: e.toString()),
+        isInitialized: true,
+      ));
+      return null;
+    }
+  }
+
+  /// Resend OTP code
+  Future<bool> resendOtp({
+    required String type,
+    required String email,
+  }) async {
+    state = AsyncValue.data(
+      state.value?.copyWith(isLoading: true, clearError: true) ??
+          const AuthState(isLoading: true),
+    );
+
+    try {
+      final repository = ref.read(authRepositoryProvider);
+      await repository.resendOtp(type: type, email: email);
+
+      state = AsyncValue.data(
+        state.value?.copyWith(isLoading: false) ??
+            const AuthState(isInitialized: true),
+      );
+      return true;
+    } on app_errors.AppAuthException catch (e) {
+      state = AsyncValue.data(state.value?.copyWith(
+            isLoading: false,
+            error: e,
+          ) ??
+          AuthState(error: e, isInitialized: true));
+      return false;
+    } catch (e) {
+      state = AsyncValue.data(state.value?.copyWith(
+            isLoading: false,
+            error: app_errors.NetworkException(message: e.toString()),
+          ) ??
+          AuthState(
+            error: app_errors.NetworkException(message: e.toString()),
+            isInitialized: true,
+          ));
+      return false;
+    }
+  }
+
+  /// Request email change
+  Future<bool> requestEmailChange({required String newEmail}) async {
+    state = AsyncValue.data(
+      state.value?.copyWith(isLoading: true, clearError: true) ??
+          const AuthState(isLoading: true),
+    );
+
+    try {
+      final repository = ref.read(authRepositoryProvider);
+      await repository.requestEmailChange(newEmail: newEmail);
+
+      state = AsyncValue.data(
+        state.value?.copyWith(isLoading: false) ??
+            const AuthState(isInitialized: true),
+      );
+      return true;
+    } on app_errors.AppAuthException catch (e) {
+      state = AsyncValue.data(state.value?.copyWith(
+            isLoading: false,
+            error: e,
+          ) ??
+          AuthState(error: e, isInitialized: true));
+      return false;
+    } catch (e) {
+      state = AsyncValue.data(state.value?.copyWith(
+            isLoading: false,
+            error: app_errors.NetworkException(message: e.toString()),
+          ) ??
+          AuthState(
+            error: app_errors.NetworkException(message: e.toString()),
+            isInitialized: true,
+          ));
+      return false;
+    }
+  }
 }
 
 /// Main auth provider using AsyncNotifier

@@ -51,4 +51,27 @@ abstract class AuthRepository {
 
   /// Check if user is currently authenticated
   bool get isAuthenticated;
+
+  /// Verify OTP code for signup, recovery, or email change
+  /// Returns the authenticated user on success
+  /// Throws [InvalidOtpException] if code is invalid
+  /// Throws [OtpExpiredException] if code has expired
+  Future<User?> verifyOtp({
+    required String type,
+    required String email,
+    required String token,
+  });
+
+  /// Resend OTP code for signup or email change
+  /// For recovery, use resetPasswordForEmail instead
+  /// Throws [TooManyRequestsException] if rate limited
+  Future<void> resendOtp({
+    required String type,
+    required String email,
+  });
+
+  /// Request email change for current user
+  /// Sends OTP to the new email address
+  /// Throws [EmailAlreadyInUseException] if email is taken
+  Future<void> requestEmailChange({required String newEmail});
 }
