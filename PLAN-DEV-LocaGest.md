@@ -1,5 +1,8 @@
 # LOCAGEST - Plan de Développement
-## Checklist de suivi des étapes
+## Application Mobile (Flutter - Android & iOS)
+### Checklist de suivi des étapes
+
+> **Note** : Ce plan concerne l'application mobile Flutter. La version web (Next.js) sera développée ultérieurement dans un projet séparé.
 
 ---
 
@@ -19,7 +22,7 @@
 ### 1.1 Environnement de développement
 - [X] Installer/Mettre à jour Flutter SDK (version stable)
 - [X] Créer le projet Flutter : `flutter create --org com.locagest locagest`
-- [X] Configurer les plateformes cibles (Android, iOS, Web)
+- [X] Configurer les plateformes cibles (Android, iOS)
 - [X] Initialiser le repository Git
 - [X] Créer la structure de dossiers (Clean Architecture)
 
@@ -672,12 +675,60 @@
 - [ ] Google Calendar
 - [ ] SMS (Twilio)
 
-## Phase 19 : Publication
-- [ ] Build Android release
-- [ ] Publication Play Store
-- [ ] Build iOS release
-- [ ] Publication App Store
-- [ ] Déploiement web
+## Phase 19 : Publication Mobile
+- [ ] 🔴 Build Android release (APK + AAB)
+- [ ] 🔴 Configuration Play Store (fiche, screenshots, icônes)
+- [ ] 🔴 Publication Play Store
+- [ ] 🔴 Build iOS release
+- [ ] 🔴 Configuration App Store Connect (fiche, screenshots, icônes)
+- [ ] 🔴 Publication App Store
+- [ ] 🟡 Tests bêta (TestFlight / Internal Testing)
+
+---
+
+# SPRINT 5 : Application Web Next.js (Phase ultérieure)
+
+## Phase 20 : Setup Next.js
+
+### 20.1 Environnement de développement
+- [ ] Créer le projet Next.js 14+ : `npx create-next-app@latest locagest-web`
+- [ ] Configurer TypeScript
+- [ ] Installer et configurer Tailwind CSS
+- [ ] Installer Shadcn/ui
+- [ ] Configurer Supabase client (@supabase/supabase-js)
+- [ ] Configurer les variables d'environnement
+
+### 20.2 Structure du projet
+- [ ] Configurer App Router avec groupes de routes
+- [ ] Configurer middleware d'authentification
+- [ ] Setup React Query pour le data fetching
+- [ ] Setup Zustand pour le state management
+
+## Phase 21 : Authentification Web
+- [ ] Page de connexion
+- [ ] Page d'inscription
+- [ ] Gestion des sessions (même Auth Supabase que mobile)
+- [ ] Protection des routes
+- [ ] Gestion des rôles (RBAC)
+
+## Phase 22 : Modules CRUD Web
+- [ ] Dashboard avec KPIs et tableaux
+- [ ] Module Immeubles (liste, détail, formulaire)
+- [ ] Module Lots (liste, détail, formulaire)
+- [ ] Module Locataires (liste, détail, formulaire)
+- [ ] Module Baux (liste, détail, formulaire)
+
+## Phase 23 : Paiements et Documents Web
+- [ ] Module Paiements (liste, enregistrement, filtres)
+- [ ] Génération de quittances PDF (@react-pdf/renderer)
+- [ ] États des lieux (consultation, édition)
+- [ ] Rapports comptables avec graphiques
+
+## Phase 24 : Déploiement Web
+- [ ] Configuration Vercel / autre hébergeur
+- [ ] Variables d'environnement production
+- [ ] Domaine personnalisé
+- [ ] Tests et optimisation
 
 ---
 
@@ -685,12 +736,13 @@
 
 ## Résumé par sprint
 
-| Sprint | Phases | Durée | Statut | Progression |
-|--------|--------|-------|--------|-------------|
-| Sprint 1 - MVP | 1-11 | 2 semaines | 🔄 En cours | ██████████ 95% |
-| Sprint 2 - États des lieux | 12 | 1 semaine | ⏳ À venir | ░░░░░░░░░░ 0% |
-| Sprint 3 - Rapports | 13-16 | 1 semaine | ⏳ À venir | ░░░░░░░░░░ 0% |
-| Sprint 4 - Évolutions | 17-19 | TBD | ⏳ Backlog | ░░░░░░░░░░ 0% |
+| Sprint | Phases | Plateforme | Statut | Progression |
+|--------|--------|------------|--------|-------------|
+| Sprint 1 - MVP Mobile | 1-11 | Flutter (Android/iOS) | 🔄 En cours | ██████████ 95% |
+| Sprint 2 - États des lieux | 12 | Flutter (Android/iOS) | ⏳ À venir | ░░░░░░░░░░ 0% |
+| Sprint 3 - Rapports | 13-16 | Flutter (Android/iOS) | ⏳ À venir | ░░░░░░░░░░ 0% |
+| Sprint 4 - Publication Mobile | 17-19 | Flutter (Android/iOS) | ⏳ Backlog | ░░░░░░░░░░ 0% |
+| Sprint 5 - Application Web | 20-24 | Next.js | ⏳ Ultérieur | ░░░░░░░░░░ 0% |
 
 ## Checklist des livrables MVP
 
@@ -705,6 +757,8 @@
 - [ ] Tests validés
 
 ## Progression par phase
+
+### Application Mobile (Flutter)
 
 | Phase | Nom | Statut |
 |-------|-----|--------|
@@ -724,6 +778,19 @@
 | 14 | Dépenses | ⬜ |
 | 15 | Notifications | ⬜ |
 | 16 | Améliorations | ⬜ |
+| 17 | Fonctionnalités avancées | ⬜ |
+| 18 | Intégrations | ⬜ |
+| 19 | Publication Mobile | ⬜ |
+
+### Application Web (Next.js - Ultérieur)
+
+| Phase | Nom | Statut |
+|-------|-----|--------|
+| 20 | Setup Next.js | ⬜ |
+| 21 | Authentification Web | ⬜ |
+| 22 | Modules CRUD Web | ⬜ |
+| 23 | Paiements et Documents | ⬜ |
+| 24 | Déploiement Web | ⬜ |
 
 ---
 
@@ -760,22 +827,53 @@
 
 ## Ressources
 
+### Flutter (Mobile)
 - [Supabase Flutter](https://supabase.com/docs/guides/getting-started/quickstarts/flutter)
 - [Riverpod](https://riverpod.dev/)
 - [GoRouter](https://pub.dev/packages/go_router)
 - [Package PDF](https://pub.dev/packages/pdf)
 
+### Next.js (Web - Phase ultérieure)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Supabase Next.js](https://supabase.com/docs/guides/getting-started/quickstarts/nextjs)
+- [Shadcn/ui](https://ui.shadcn.com/)
+- [React Query](https://tanstack.com/query/latest)
+- [Zustand](https://zustand-demo.pmnd.rs/)
+
 ### Commandes utiles
+
+**Flutter (Mobile)**
 ```bash
 # Générer freezed
 flutter pub run build_runner build --delete-conflicting-outputs
 
-# Build
+# Build Android
 flutter build apk --release
+flutter build appbundle --release
+
+# Build iOS
 flutter build ios --release
-flutter build web --release
+
+# Lancer sur appareil
+flutter run -d android
+flutter run -d ios
+```
+
+**Next.js (Web - Phase ultérieure)**
+```bash
+# Création projet
+npx create-next-app@latest locagest-web --typescript --tailwind --app
+
+# Développement
+npm run dev
+
+# Build production
+npm run build
+
+# Déploiement Vercel
+vercel --prod
 ```
 
 ---
 
-*Dernière mise à jour : 9 Janvier 2026 - Phase 10 (Dashboard) terminée*
+*Dernière mise à jour : 15 Janvier 2026 - Recentrage sur mobile Flutter (Android/iOS) + Next.js pour web ultérieur*
