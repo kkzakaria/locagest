@@ -83,6 +83,9 @@ dependencies:
   # URL launching
   url_launcher: ^6.2.5
 
+  # Google Fonts for typography
+  google_fonts: ^6.2.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
