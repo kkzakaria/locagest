@@ -8,10 +8,11 @@
 
 | Information | Valeur |
 |-------------|--------|
-| Version | 1.0 |
+| Version | 1.1 |
 | Date | Janvier 2026 |
 | Statut | Draft |
-| Plateforme | Mobile (Flutter) + Web |
+| Plateforme Mobile | Flutter (Android & iOS) |
+| Plateforme Web | Next.js (Phase ultérieure) |
 
 ---
 
@@ -312,22 +313,36 @@ users
 
 | Composant | Technologie |
 |-----------|-------------|
-| Frontend Mobile | Flutter (Dart) |
-| Frontend Web | Flutter Web |
+| **Application Mobile** | Flutter (Dart) - Android & iOS |
+| **Application Web** | Next.js (TypeScript) - Phase ultérieure |
 | Backend | Supabase (PostgreSQL + Auth + Storage + Edge Functions) |
 | Base de données | PostgreSQL (via Supabase) |
 | Stockage fichiers | Supabase Storage |
 | Authentification | Supabase Auth |
-| Génération PDF | pdf (Flutter) + Edge Functions |
-| Notifications | Firebase Cloud Messaging (optionnel) |
+| Génération PDF Mobile | pdf (Flutter) |
+| Génération PDF Web | @react-pdf/renderer (Next.js) |
+| Notifications | Firebase Cloud Messaging |
+
+> **Note stratégique** : Le backend Supabase est partagé entre les plateformes. L'API et la structure de données sont identiques, permettant une transition fluide vers le web.
 
 ### 7.2 Architecture applicative
 
-L'application suit une architecture **Clean Architecture** avec les couches suivantes :
+#### Application Mobile (Flutter)
 
-1. **Presentation Layer** : Widgets Flutter, state management (Riverpod ou Bloc)
+L'application mobile suit une architecture **Clean Architecture** :
+
+1. **Presentation Layer** : Widgets Flutter, state management (Riverpod)
 2. **Domain Layer** : Use cases, entities, repository interfaces
 3. **Data Layer** : Repository implementations, Supabase data sources
+
+#### Application Web (Next.js - Phase ultérieure)
+
+L'application web utilisera :
+
+1. **App Router** : Next.js 14+ avec Server Components
+2. **State Management** : React Query + Zustand
+3. **UI** : Tailwind CSS + Shadcn/ui
+4. **API** : Supabase client (même backend que mobile)
 
 ### 7.3 Sécurité
 
@@ -337,7 +352,7 @@ L'application suit une architecture **Clean Architecture** avec les couches suiv
 - Chiffrement des données sensibles
 - Stockage sécurisé des documents (buckets privés)
 
-### 7.4 Structure du projet Flutter
+### 7.4 Structure du projet Flutter (Mobile)
 
 ```
 lib/
@@ -359,6 +374,25 @@ lib/
 │   ├── widgets/
 │   └── providers/
 └── main.dart
+```
+
+### 7.5 Structure du projet Next.js (Web - Phase ultérieure)
+
+```
+src/
+├── app/                    # App Router (pages et layouts)
+│   ├── (auth)/            # Routes authentification
+│   ├── (dashboard)/       # Routes protégées
+│   └── api/               # API Routes si nécessaire
+├── components/            # Composants React
+│   ├── ui/               # Composants Shadcn/ui
+│   └── features/         # Composants métier
+├── lib/                   # Utilitaires et configuration
+│   ├── supabase/         # Client Supabase
+│   └── utils/            # Helpers
+├── hooks/                 # Custom React hooks
+├── stores/                # Zustand stores
+└── types/                 # Types TypeScript
 ```
 
 ---
@@ -401,9 +435,9 @@ lib/
 
 ## 9. Roadmap et phases
 
-### 9.1 Phase 1 : MVP (2 semaines)
+### 9.1 Phase 1 : MVP Mobile (2 semaines) ✅ 95%
 
-**Objectif** : Application fonctionnelle avec les features core
+**Objectif** : Application mobile fonctionnelle (Android & iOS) avec les features core
 
 **Semaine 1 :**
 
@@ -419,26 +453,45 @@ lib/
 3. Dashboard basique avec KPIs
 4. Tests et corrections
 
-### 9.2 Phase 2 : États des lieux (1 semaine)
+### 9.2 Phase 2 : États des lieux Mobile (1 semaine)
 
 - Module états des lieux complet
 - Capture et annotation photos
 - Signature électronique
 - Génération PDF état des lieux
 
-### 9.3 Phase 3 : Rapports et améliorations (1 semaine)
+### 9.3 Phase 3 : Rapports et améliorations Mobile (1 semaine)
 
 - Rapports comptables complets
 - Export Excel
 - Notifications push
 - Gestion des dépenses avancée
 
-### 9.4 Phase 4 : Évolutions futures
+### 9.4 Phase 4 : Publication Mobile
+
+- Build Android release et publication Play Store
+- Build iOS release et publication App Store
+- Tests utilisateurs et corrections
+
+### 9.5 Phase 5 : Application Web (Next.js) - Phase ultérieure
+
+**Objectif** : Version web pour la gestion bureau
+
+- Setup projet Next.js 14+ avec Supabase
+- Authentification (même système que mobile)
+- Dashboard web avec tableaux étendus
+- CRUD complet (Immeubles, Lots, Locataires, Baux)
+- Paiements et quittances
+- Rapports avec visualisations avancées
+- États des lieux (consultation et édition)
+
+### 9.6 Phase 6 : Évolutions futures
 
 - Répartition des charges entre locataires
 - Portail locataire (consultation quittances, signalement problèmes)
 - Intégration comptable (export format comptable standard)
 - Mode multi-propriétaires
+- Synchronisation temps réel mobile/web
 
 ---
 
@@ -468,8 +521,10 @@ lib/
 ### 11.2 Contraintes
 
 - **Budget** : Solution 100% cloud avec Supabase (plan gratuit suffisant pour démarrer)
-- **Délai** : MVP fonctionnel en 2 semaines
-- **Technique** : Compatibilité Android/iOS/Web avec une seule codebase Flutter
+- **Délai** : MVP mobile fonctionnel en 2 semaines
+- **Technique Mobile** : Compatibilité Android & iOS avec Flutter
+- **Technique Web** : Next.js (TypeScript) - développement ultérieur
+- **Backend partagé** : Supabase unique pour mobile et web
 - **Légal** : Conformité RGPD pour les données personnelles des locataires
 
 ---
@@ -498,6 +553,7 @@ lib/
 | Version | Date | Auteur | Modifications |
 |---------|------|--------|---------------|
 | 1.0 | Janvier 2026 | — | Création initiale |
+| 1.1 | 15 Janvier 2026 | — | Recentrage sur mobile Flutter (Android/iOS) + Next.js pour web ultérieur |
 
 ---
 

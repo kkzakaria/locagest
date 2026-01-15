@@ -4,16 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-LocaGest is a property management application (gestion locative) built with Flutter for mobile (Android/iOS) and web. It manages rental properties, tenants, leases, payments, and generates rent receipts (quittances). The backend uses Supabase (PostgreSQL + Auth + Storage).
+LocaGest is a property management application (gestion locative) built with Flutter for **mobile (Android & iOS)**. It manages rental properties, tenants, leases, payments, and generates rent receipts (quittances). The backend uses Supabase (PostgreSQL + Auth + Storage).
+
+> **Note**: The web version will be developed separately using Next.js (TypeScript) in a future phase, sharing the same Supabase backend.
 
 ## Development Commands
 
 ```bash
-# Run the app
-flutter run
-
-# Run on specific platform
-flutter run -d chrome          # Web
+# Run the app on mobile
 flutter run -d android         # Android
 flutter run -d ios             # iOS
 
@@ -27,10 +25,10 @@ flutter analyze
 flutter test
 flutter test test/path/to/specific_test.dart
 
-# Build releases
-flutter build apk --release
-flutter build ios --release
-flutter build web --release
+# Build releases (Mobile only)
+flutter build apk --release          # Android APK
+flutter build appbundle --release    # Android App Bundle (Play Store)
+flutter build ios --release          # iOS
 ```
 
 ## Architecture
