@@ -1,3 +1,6 @@
+import 'dart:io' show Platform;
+
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -9,6 +12,19 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/theme.dart';
 
+/// Adapte l'URL Supabase pour l'émulateur Android
+/// L'émulateur Android ne peut pas accéder à localhost (127.0.0.1)
+/// Il faut utiliser 10.0.2.2 qui pointe vers l'hôte
+String _getSupabaseUrl(String url) {
+  // Sur Android (pas web), remplacer localhost par 10.0.2.2
+  if (!kIsWeb && Platform.isAndroid) {
+    return url
+        .replaceAll('localhost', '10.0.2.2')
+        .replaceAll('127.0.0.1', '10.0.2.2');
+  }
+  return url;
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -17,9 +33,12 @@ Future<void> main() async {
   final envFile = environment == 'prod' ? '.env.production' : '.env';
   await dotenv.load(fileName: envFile);
 
-  // Initialize Supabase
+  // Initialize Supabase (avec adaptation URL pour émulateur Android)
+  final supabaseUrl = _getSupabaseUrl(dotenv.env['SUPABASE_URL']!);
+  debugPrint('🔗 Supabase URL: $supabaseUrl');
+  debugPrint('🤖 Platform: Android=${!kIsWeb && Platform.isAndroid}');
   await Supabase.initialize(
-    url: dotenv.env['SUPABASE_URL']!,
+    url: supabaseUrl,
     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
 

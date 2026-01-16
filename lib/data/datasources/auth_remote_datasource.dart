@@ -88,43 +88,18 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
     required String password,
   }) async {
     try {
-      // Step 1: Check if account is locked
-      final lockoutCheck = await _supabaseClient.rpc(
-        'check_login_attempt',
-        params: {'user_email': email},
-      );
-
-      if (lockoutCheck != null && lockoutCheck['allowed'] == false) {
-        final lockedUntil = lockoutCheck['locked_until'] != null
-            ? DateTime.parse(lockoutCheck['locked_until'])
-            : null;
-        throw app_errors.AccountLockedException(lockedUntil: lockedUntil);
-      }
-
-      // Step 2: Attempt sign in
+      // Attempt sign in directly
       final response = await _supabaseClient.auth.signInWithPassword(
         email: email,
         password: password,
       );
 
       if (response.user == null) {
-        // Record failed attempt
-        await _recordFailedLogin(email);
         throw const app_errors.InvalidCredentialsException();
       }
 
-      // Step 3: Reset failed attempts on success
-      await _supabaseClient.rpc(
-        'reset_login_attempts',
-        params: {'user_email': email},
-      );
-
-      // Step 4: Get user profile
       return await _getUserProfile(response.user!.id);
     } on AuthException catch (e) {
-      // Record failed attempt for auth errors
-      await _recordFailedLogin(email);
-
       if (e.message.contains('Invalid login credentials')) {
         throw const app_errors.InvalidCredentialsException();
       }
@@ -132,8 +107,6 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
         throw const app_errors.TooManyRequestsException();
       }
       throw app_errors.NetworkException(message: e.message);
-    } on app_errors.AccountLockedException {
-      rethrow;
     } on app_errors.InvalidCredentialsException {
       rethrow;
     } catch (e) {
@@ -316,18 +289,6 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
       return UserModel.fromJson(response);
     } on PostgrestException catch (e) {
       throw app_errors.NetworkException(message: e.message);
-    }
-  }
-
-  /// Record a failed login attempt (increments counter, may trigger lockout)
-  Future<void> _recordFailedLogin(String email) async {
-    try {
-      await _supabaseClient.rpc(
-        'record_failed_login',
-        params: {'user_email': email},
-      );
-    } catch (_) {
-      // Silent fail - don't want to mask the original error
     }
   }
 
