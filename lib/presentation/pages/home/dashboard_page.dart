@@ -48,85 +48,24 @@ class DashboardPage extends ConsumerWidget {
           ],
         ),
         actions: [
-          // User menu
-          PopupMenuButton<String>(
-            icon: const CircleAvatar(
-              child: Icon(Icons.person),
-            ),
-            onSelected: (value) async {
-              switch (value) {
-                case 'users':
-                  context.go(AppRoutes.userManagement);
-                  break;
-                case 'logout':
-                  await _handleLogout(context, ref);
-                  break;
-              }
-            },
-            itemBuilder: (context) => [
-              // User info header
-              PopupMenuItem<String>(
-                enabled: false,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      user?.fullName ?? 'Utilisateur',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                    Text(
-                      user?.email ?? '',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 2,
-                      ),
-                      decoration: BoxDecoration(
-                        color: _getRoleColor(user?.role),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        user?.role.displayName ?? '',
-                        style: const TextStyle(
-                          fontSize: 10,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const PopupMenuDivider(),
-              // User management (admin only)
-              if (user?.canManageUsers ?? false)
-                const PopupMenuItem<String>(
-                  value: 'users',
-                  child: ListTile(
-                    leading: Icon(Icons.people),
-                    title: Text('Gestion des utilisateurs'),
-                    contentPadding: EdgeInsets.zero,
+          // Profile avatar - navigates to profile page
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: GestureDetector(
+              onTap: () => context.push(AppRoutes.profile),
+              child: CircleAvatar(
+                backgroundColor: Theme.of(context).primaryColor,
+                child: Text(
+                  user?.fullName.isNotEmpty == true
+                      ? user!.fullName[0].toUpperCase()
+                      : '?',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              // Logout
-              const PopupMenuItem<String>(
-                value: 'logout',
-                child: ListTile(
-                  leading: Icon(Icons.logout, color: Colors.red),
-                  title:
-                      Text('Deconnexion', style: TextStyle(color: Colors.red)),
-                  contentPadding: EdgeInsets.zero,
-                ),
               ),
-            ],
+            ),
           ),
         ],
       ),
@@ -378,46 +317,4 @@ class DashboardPage extends ConsumerWidget {
     );
   }
 
-  Color _getRoleColor(UserRole? role) {
-    switch (role) {
-      case UserRole.admin:
-        return Colors.red;
-      case UserRole.gestionnaire:
-        return Colors.blue;
-      case UserRole.assistant:
-        return Colors.green;
-      default:
-        return Colors.grey;
-    }
-  }
-
-  Future<void> _handleLogout(BuildContext context, WidgetRef ref) async {
-    // Show confirmation dialog
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Deconnexion'),
-        content: const Text('Voulez-vous vraiment vous deconnecter?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Annuler'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-            ),
-            child: const Text('Deconnexion'),
-          ),
-        ],
-      ),
-    );
-
-    if (confirmed == true) {
-      await ref.read(authProvider.notifier).signOut();
-      // Navigation is handled by GoRouter redirect
-    }
-  }
 }

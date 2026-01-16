@@ -144,27 +144,52 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               value: _formatDate(user.createdAt),
             ),
 
+            // Admin section - User management
+            if (user.canManageUsers) ...[
+              const SizedBox(height: 24),
+              const Divider(),
+              const SizedBox(height: 16),
+
+              Text(
+                'Administration',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 16),
+
+              _buildActionTile(
+                context,
+                icon: Icons.people_outline,
+                label: 'Gestion des utilisateurs',
+                subtitle: 'Gérer les comptes utilisateurs',
+                onTap: () => context.push(AppRoutes.userManagement),
+              ),
+            ],
+
             const SizedBox(height: 32),
+            const Divider(),
+            const SizedBox(height: 24),
 
             // Sign out button
             SizedBox(
               width: double.infinity,
-              child: OutlinedButton.icon(
-                onPressed: () async {
-                  await ref.read(authProvider.notifier).signOut();
-                  if (context.mounted) {
-                    context.go(AppRoutes.login);
-                  }
-                },
+              child: ElevatedButton.icon(
+                onPressed: () => _handleLogout(context),
                 icon: const Icon(Icons.logout),
-                label: const Text('Deconnexion'),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.red,
-                  side: const BorderSide(color: Colors.red),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+                label: const Text('Déconnexion'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
             ),
+
+            const SizedBox(height: 32),
           ],
         ),
       ),
@@ -244,10 +269,101 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   String _formatDate(DateTime date) {
     final months = [
-      'janvier', 'fevrier', 'mars', 'avril', 'mai', 'juin',
-      'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre'
+      'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+      'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'
     ];
     return '${date.day} ${months[date.month - 1]} ${date.year}';
+  }
+
+  Widget _buildActionTile(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                icon,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: 13,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.chevron_right,
+              color: Colors.grey[400],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handleLogout(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Déconnexion'),
+        content: const Text('Voulez-vous vraiment vous déconnecter ?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Annuler'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Déconnexion'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && context.mounted) {
+      await ref.read(authProvider.notifier).signOut();
+      // Navigation is handled by GoRouter redirect
+    }
   }
 
   void _showChangeEmailDialog(BuildContext context) {
