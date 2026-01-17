@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../presentation/providers/auth_provider.dart';
+import '../../presentation/providers/onboarding_provider.dart';
+import '../../presentation/pages/intro/splash_page.dart';
+import '../../presentation/pages/intro/onboarding_page.dart';
 import '../../presentation/pages/auth/login_page.dart';
 import '../../presentation/pages/auth/register_page.dart';
 import '../../presentation/pages/auth/forgot_password_page.dart';
@@ -33,6 +36,9 @@ import '../../presentation/widgets/dashboard/main_navigation_shell.dart';
 /// Route paths
 class AppRoutes {
   AppRoutes._();
+
+  static const String splash = '/splash';
+  static const String onboarding = '/onboarding';
 
   static const String login = '/auth/login';
   static const String register = '/auth/register';
@@ -77,9 +83,10 @@ class AppRoutes {
 /// GoRouter provider with auth redirect logic
 final routerProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authProvider);
+  final onboardingCompleted = ref.watch(onboardingProvider);
 
   return GoRouter(
-    initialLocation: AppRoutes.login,
+    initialLocation: AppRoutes.splash,
     debugLogDiagnostics: true,
     redirect: (context, state) {
       final isLoading = authState.isLoading;
@@ -91,6 +98,20 @@ final routerProvider = Provider<GoRouter>((ref) {
       }
 
       final isAuthenticated = authData.isAuthenticated;
+
+      // Check onboarding
+      if (!onboardingCompleted) {
+        if (state.matchedLocation == AppRoutes.splash || 
+            state.matchedLocation == AppRoutes.onboarding) {
+          return null;
+        }
+        return AppRoutes.splash;
+      }
+
+      if (state.matchedLocation == AppRoutes.splash || 
+          state.matchedLocation == AppRoutes.onboarding) {
+        return AppRoutes.login;
+      }
       final isAuthRoute = state.matchedLocation.startsWith('/auth');
       final isResetPassword = state.matchedLocation == AppRoutes.resetPassword;
 
@@ -113,6 +134,18 @@ final routerProvider = Provider<GoRouter>((ref) {
       return null;
     },
     routes: [
+      // Intro routes
+      GoRoute(
+        path: AppRoutes.splash,
+        name: 'splash',
+        builder: (context, state) => const SplashPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.onboarding,
+        name: 'onboarding',
+        builder: (context, state) => const OnboardingPage(),
+      ),
+
       // Auth routes (outside shell - no bottom nav)
       GoRoute(
         path: AppRoutes.login,
