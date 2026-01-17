@@ -73,6 +73,11 @@ class MainNavigationShell extends ConsumerWidget {
             label: 'Locataires',
           ),
           NavigationDestination(
+            icon: Icon(Icons.description_outlined),
+            selectedIcon: Icon(Icons.description),
+            label: 'Baux',
+          ),
+          NavigationDestination(
             icon: Icon(Icons.payments_outlined),
             selectedIcon: Icon(Icons.payments),
             label: 'Paiements',
@@ -86,7 +91,8 @@ class MainNavigationShell extends ConsumerWidget {
   int _getSelectedIndex(String location) {
     if (location.startsWith('/buildings')) return 1;
     if (location.startsWith('/tenants')) return 2;
-    if (location.startsWith('/payments')) return 3;
+    if (location.startsWith('/leases')) return 3;
+    if (location.startsWith('/payments')) return 4;
     return 0; // Dashboard
   }
 
@@ -103,6 +109,9 @@ class MainNavigationShell extends ConsumerWidget {
         context.go('/tenants');
         break;
       case 3:
+        context.go('/leases');
+        break;
+      case 4:
         context.go('/payments');
         break;
     }
