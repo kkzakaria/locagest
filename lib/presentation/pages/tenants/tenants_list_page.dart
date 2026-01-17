@@ -71,19 +71,29 @@ class _TenantsListPageState extends ConsumerState<TenantsListPage> {
     final canManage = ref.watch(canManageTenantsProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Locataires'),
-        actions: [
-          // Refresh button
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: tenantsState.isLoading ? null : _refresh,
-            tooltip: 'Actualiser',
-          ),
-        ],
-      ),
+      backgroundColor: Colors.transparent,
       body: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Locataires',
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.refresh),
+                  onPressed: tenantsState.isLoading ? null : _refresh,
+                  tooltip: 'Actualiser',
+                ),
+              ],
+            ),
+          ),
           // Search bar
           _buildSearchBar(tenantsState),
 

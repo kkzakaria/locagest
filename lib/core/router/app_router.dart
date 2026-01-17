@@ -182,6 +182,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
 
+      GoRoute(
+        path: AppRoutes.profile,
+        name: 'profile',
+        builder: (context, state) => const ProfilePage(),
+      ),
+
       // Main app routes with bottom navigation (T062-T063)
       ShellRoute(
         builder: (context, state, child) => MainNavigationShell(child: child),
@@ -210,138 +216,132 @@ final routerProvider = Provider<GoRouter>((ref) {
             name: 'payments',
             builder: (context, state) => const PaymentsPage(),
           ),
+
+          // --- Moved Routes (inherit Shell UI) ---
+
+          // Settings routes
+          GoRoute(
+            path: AppRoutes.userManagement,
+            name: 'user-management',
+            builder: (context, state) => const UserManagementPage(),
+          ),
+
+          // Buildings detail routes
+          GoRoute(
+            path: AppRoutes.buildingNew,
+            name: 'building-new',
+            builder: (context, state) => const BuildingFormPage(),
+          ),
+          GoRoute(
+            path: AppRoutes.buildingDetail,
+            name: 'building-detail',
+            builder: (context, state) {
+              final id = state.pathParameters['id']!;
+              return BuildingDetailPage(buildingId: id);
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.buildingEdit,
+            name: 'building-edit',
+            builder: (context, state) {
+              final id = state.pathParameters['id']!;
+              return BuildingEditPageWrapper(buildingId: id);
+            },
+          ),
+
+          // Units routes
+          GoRoute(
+            path: AppRoutes.unitNew,
+            name: 'unit-new',
+            builder: (context, state) {
+              final buildingId = state.pathParameters['buildingId']!;
+              return UnitFormPage(buildingId: buildingId);
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.unitDetail,
+            name: 'unit-detail',
+            builder: (context, state) {
+              final buildingId = state.pathParameters['buildingId']!;
+              final unitId = state.pathParameters['unitId']!;
+              return UnitDetailPage(buildingId: buildingId, unitId: unitId);
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.unitEdit,
+            name: 'unit-edit',
+            builder: (context, state) {
+              final buildingId = state.pathParameters['buildingId']!;
+              final unitId = state.pathParameters['unitId']!;
+              return UnitEditPage(buildingId: buildingId, unitId: unitId);
+            },
+          ),
+
+          // Tenants detail routes
+          GoRoute(
+            path: AppRoutes.tenantNew,
+            name: 'tenant-new',
+            builder: (context, state) => const TenantFormPage(),
+          ),
+          GoRoute(
+            path: AppRoutes.tenantDetail,
+            name: 'tenant-detail',
+            builder: (context, state) {
+              final id = state.pathParameters['id']!;
+              return TenantDetailPage(tenantId: id);
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.tenantEdit,
+            name: 'tenant-edit',
+            builder: (context, state) {
+              final id = state.pathParameters['id']!;
+              return TenantEditPage(tenantId: id);
+            },
+          ),
+
+          // Leases routes
+          GoRoute(
+            path: AppRoutes.leases,
+            name: 'leases',
+            builder: (context, state) => const LeasesListPage(),
+          ),
+          GoRoute(
+            path: AppRoutes.leaseNew,
+            name: 'lease-new',
+            builder: (context, state) {
+              final unitId = state.uri.queryParameters['unitId'];
+              final tenantId = state.uri.queryParameters['tenantId'];
+              return LeaseFormPage(unitId: unitId, tenantId: tenantId);
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.leaseDetail,
+            name: 'lease-detail',
+            builder: (context, state) {
+              final id = state.pathParameters['id']!;
+              return LeaseDetailPage(leaseId: id);
+            },
+          ),
+          GoRoute(
+            path: AppRoutes.leaseEdit,
+            name: 'lease-edit',
+            builder: (context, state) {
+              final id = state.pathParameters['id']!;
+              return LeaseEditPage(leaseId: id);
+            },
+          ),
+
+          // Receipts routes
+          GoRoute(
+            path: AppRoutes.receiptPreview,
+            name: 'receipt-preview',
+            builder: (context, state) {
+              final paymentId = state.pathParameters['paymentId']!;
+              return ReceiptPreviewPage(paymentId: paymentId);
+            },
+          ),
         ],
-      ),
-
-      // Detail routes outside shell (no bottom nav on detail pages - T064)
-      // Profile route
-      GoRoute(
-        path: AppRoutes.profile,
-        name: 'profile',
-        builder: (context, state) => const ProfilePage(),
-      ),
-
-      // Settings routes
-      GoRoute(
-        path: AppRoutes.userManagement,
-        name: 'user-management',
-        builder: (context, state) => const UserManagementPage(),
-      ),
-
-      // Buildings detail routes
-      GoRoute(
-        path: AppRoutes.buildingNew,
-        name: 'building-new',
-        builder: (context, state) => const BuildingFormPage(),
-      ),
-      GoRoute(
-        path: AppRoutes.buildingDetail,
-        name: 'building-detail',
-        builder: (context, state) {
-          final id = state.pathParameters['id']!;
-          return BuildingDetailPage(buildingId: id);
-        },
-      ),
-      GoRoute(
-        path: AppRoutes.buildingEdit,
-        name: 'building-edit',
-        builder: (context, state) {
-          final id = state.pathParameters['id']!;
-          return BuildingEditPageWrapper(buildingId: id);
-        },
-      ),
-
-      // Units routes
-      GoRoute(
-        path: AppRoutes.unitNew,
-        name: 'unit-new',
-        builder: (context, state) {
-          final buildingId = state.pathParameters['buildingId']!;
-          return UnitFormPage(buildingId: buildingId);
-        },
-      ),
-      GoRoute(
-        path: AppRoutes.unitDetail,
-        name: 'unit-detail',
-        builder: (context, state) {
-          final buildingId = state.pathParameters['buildingId']!;
-          final unitId = state.pathParameters['unitId']!;
-          return UnitDetailPage(buildingId: buildingId, unitId: unitId);
-        },
-      ),
-      GoRoute(
-        path: AppRoutes.unitEdit,
-        name: 'unit-edit',
-        builder: (context, state) {
-          final buildingId = state.pathParameters['buildingId']!;
-          final unitId = state.pathParameters['unitId']!;
-          return UnitEditPage(buildingId: buildingId, unitId: unitId);
-        },
-      ),
-
-      // Tenants detail routes
-      GoRoute(
-        path: AppRoutes.tenantNew,
-        name: 'tenant-new',
-        builder: (context, state) => const TenantFormPage(),
-      ),
-      GoRoute(
-        path: AppRoutes.tenantDetail,
-        name: 'tenant-detail',
-        builder: (context, state) {
-          final id = state.pathParameters['id']!;
-          return TenantDetailPage(tenantId: id);
-        },
-      ),
-      GoRoute(
-        path: AppRoutes.tenantEdit,
-        name: 'tenant-edit',
-        builder: (context, state) {
-          final id = state.pathParameters['id']!;
-          return TenantEditPage(tenantId: id);
-        },
-      ),
-
-      // Leases routes
-      GoRoute(
-        path: AppRoutes.leases,
-        name: 'leases',
-        builder: (context, state) => const LeasesListPage(),
-      ),
-      GoRoute(
-        path: AppRoutes.leaseNew,
-        name: 'lease-new',
-        builder: (context, state) {
-          final unitId = state.uri.queryParameters['unitId'];
-          final tenantId = state.uri.queryParameters['tenantId'];
-          return LeaseFormPage(unitId: unitId, tenantId: tenantId);
-        },
-      ),
-      GoRoute(
-        path: AppRoutes.leaseDetail,
-        name: 'lease-detail',
-        builder: (context, state) {
-          final id = state.pathParameters['id']!;
-          return LeaseDetailPage(leaseId: id);
-        },
-      ),
-      GoRoute(
-        path: AppRoutes.leaseEdit,
-        name: 'lease-edit',
-        builder: (context, state) {
-          final id = state.pathParameters['id']!;
-          return LeaseEditPage(leaseId: id);
-        },
-      ),
-
-      // Receipts routes
-      GoRoute(
-        path: AppRoutes.receiptPreview,
-        name: 'receipt-preview',
-        builder: (context, state) {
-          final paymentId = state.pathParameters['paymentId']!;
-          return ReceiptPreviewPage(paymentId: paymentId);
-        },
       ),
 
       // Root redirect

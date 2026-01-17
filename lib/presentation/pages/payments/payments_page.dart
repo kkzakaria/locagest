@@ -51,17 +51,29 @@ class _PaymentsPageState extends ConsumerState<PaymentsPage> {
     final summaryAsync = ref.watch(paymentsSummaryProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Paiements'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () => ref.read(allSchedulesProvider.notifier).refresh(),
-          ),
-        ],
-      ),
+      backgroundColor: Colors.transparent,
       body: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Paiements',
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.refresh),
+                  onPressed: () => ref.read(allSchedulesProvider.notifier).refresh(),
+                  tooltip: 'Actualiser',
+                ),
+              ],
+            ),
+          ),
           // Summary cards
           summaryAsync.when(
             loading: () => const SizedBox(height: 100),

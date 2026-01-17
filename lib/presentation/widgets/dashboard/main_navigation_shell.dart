@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-/// Main navigation shell widget with bottom navigation bar
-/// Provides persistent bottom navigation across main screens
+import '../../../core/router/app_router.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../providers/auth_provider.dart';
+import '../../providers/dashboard_provider.dart';
+import 'dashboard_app_bar.dart';
+
+/// Main navigation shell widget with bottom navigation bar and global AppBar
+/// Provides persistent bottom navigation and AppBar across main screens
 class MainNavigationShell extends ConsumerWidget {
   final Widget child;
 
@@ -15,12 +21,41 @@ class MainNavigationShell extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final location = GoRouterState.of(context).uri.path;
+    final user = ref.watch(currentUserProvider);
+    final totalOverdueAsync = ref.watch(totalOverdueCountProvider);
 
     return Scaffold(
-      body: child,
+      extendBody: true, // Allow body to extend behind bottom nav
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: AppColors.backgroundGradient,
+        ),
+        child: SafeArea(
+          bottom: false,
+          child: Column(
+            children: [
+              DashboardAppBar(
+                user: user,
+                notificationCount: totalOverdueAsync.valueOrNull ?? 0,
+                onProfileTap: () => context.push(AppRoutes.profile),
+                onNotificationTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Notifications à venir')),
+                  );
+                },
+              ),
+              Expanded(
+                child: child,
+              ),
+            ],
+          ),
+        ),
+      ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _getSelectedIndex(location),
         onDestinationSelected: (index) => _navigateTo(context, index),
+        backgroundColor: Colors.white.withOpacity(0.9),
+        elevation: 2,
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.dashboard_outlined),

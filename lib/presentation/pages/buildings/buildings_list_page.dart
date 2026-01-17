@@ -57,18 +57,32 @@ class _BuildingsListPageState extends ConsumerState<BuildingsListPage> {
     final canManage = ref.watch(canManageBuildingsProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Immeubles'),
-        actions: [
-          // Refresh button
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: buildingsState.isLoading ? null : _refresh,
-            tooltip: 'Actualiser',
+      backgroundColor: Colors.transparent,
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Immeubles',
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87, // Ensure contrast on gradient
+                      ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.refresh),
+                  onPressed: buildingsState.isLoading ? null : _refresh,
+                  tooltip: 'Actualiser',
+                ),
+              ],
+            ),
           ),
+          Expanded(child: _buildBody(buildingsState)),
         ],
       ),
-      body: _buildBody(buildingsState),
       floatingActionButton: canManage.maybeWhen(
         data: (canManage) => canManage
             ? FloatingActionButton.extended(
