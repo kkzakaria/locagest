@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/router/app_router.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../domain/entities/user.dart';
 import '../../../domain/entities/overdue_rent.dart';
 import '../../../domain/entities/expiring_lease.dart';
@@ -12,6 +13,7 @@ import '../../widgets/dashboard/kpi_grid_section.dart';
 import '../../widgets/dashboard/overdue_rents_section.dart';
 import '../../widgets/dashboard/expiring_leases_section.dart';
 import '../../widgets/dashboard/occupancy_rate_widget.dart';
+import '../../widgets/dashboard/dashboard_app_bar.dart';
 
 /// Main dashboard page after login
 /// Displays KPIs, overdue rents, expiring leases, and quick actions
@@ -27,119 +29,103 @@ class DashboardPage extends ConsumerWidget {
     final totalOverdueAsync = ref.watch(totalOverdueCountProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.asset(
-                'assets/icon/app_icon.png',
-                width: 32,
-                height: 32,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return const SizedBox(width: 32, height: 32);
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: AppColors.backgroundGradient,
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              DashboardAppBar(
+                user: user,
+                notificationCount: totalOverdueAsync.valueOrNull ?? 0,
+                onProfileTap: () => context.push(AppRoutes.profile),
+                onNotificationTap: () {
+                  // TODO: Implement notification page
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Notifications à venir')),
+                  );
                 },
               ),
-            ),
-            const SizedBox(width: 12),
-            const Text('LocaGest'),
-          ],
-        ),
-        actions: [
-          // Profile avatar - navigates to profile page
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: GestureDetector(
-              onTap: () => context.push(AppRoutes.profile),
-              child: CircleAvatar(
-                backgroundColor: Theme.of(context).primaryColor,
-                child: Text(
-                  user?.fullName.isNotEmpty == true
-                      ? user!.fullName[0].toUpperCase()
-                      : '?',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    // Invalidate all dashboard providers
+                    ref.invalidate(dashboardStatsProvider);
+                    ref.invalidate(overdueRentsProvider);
+                    ref.invalidate(expiringLeasesProvider);
+                    ref.invalidate(totalOverdueCountProvider);
+                    // Wait for the main stats to reload
+                    await ref.read(dashboardStatsProvider.future);
+                  },
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Welcome message
+                        Text(
+                          'Bonjour, ${user?.fullName ?? 'Utilisateur'}!',
+                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Bienvenue sur votre tableau de bord',
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                color: Colors.grey[600],
+                              ),
+                        ),
+                        const SizedBox(height: 24),
+
+                        // KPI Cards Section (T022-T025)
+                        _buildKpiSection(context, ref, statsAsync, user),
+
+                        const SizedBox(height: 24),
+
+                        // Occupancy Rate Section (US4)
+                        statsAsync.when(
+                          data: (stats) => OccupancyRateWidget(
+                            occupancyRate: stats.occupancyRate,
+                            totalUnits: stats.totalUnitsCount,
+                            occupiedUnits: stats.occupiedUnitsCount,
+                          ),
+                          loading: () => const OccupancyRateWidgetLoading(),
+                          error: (_, _) => const SizedBox.shrink(),
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // Overdue Rents Section (US2)
+                        _buildOverdueSection(
+                            context, ref, overdueAsync, totalOverdueAsync),
+
+                        const SizedBox(height: 24),
+
+                        // Expiring Leases Section (US3)
+                        _buildExpiringSection(context, ref, expiringAsync),
+
+                        const SizedBox(height: 24),
+
+                        // Quick actions (US5)
+                        Text(
+                          'Actions rapides',
+                          style:
+                              Theme.of(context).textTheme.titleLarge?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                        const SizedBox(height: 16),
+                        _buildQuickActions(context, user),
+
+                        const SizedBox(height: 24),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-        ],
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          // Invalidate all dashboard providers
-          ref.invalidate(dashboardStatsProvider);
-          ref.invalidate(overdueRentsProvider);
-          ref.invalidate(expiringLeasesProvider);
-          ref.invalidate(totalOverdueCountProvider);
-          // Wait for the main stats to reload
-          await ref.read(dashboardStatsProvider.future);
-        },
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Welcome message
-              Text(
-                'Bonjour, ${user?.fullName ?? 'Utilisateur'}!',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Bienvenue sur votre tableau de bord',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Colors.grey[600],
-                    ),
-              ),
-              const SizedBox(height: 24),
-
-              // KPI Cards Section (T022-T025)
-              _buildKpiSection(context, ref, statsAsync, user),
-
-              const SizedBox(height: 24),
-
-              // Occupancy Rate Section (US4)
-              statsAsync.when(
-                data: (stats) => OccupancyRateWidget(
-                  occupancyRate: stats.occupancyRate,
-                  totalUnits: stats.totalUnitsCount,
-                  occupiedUnits: stats.occupiedUnitsCount,
-                ),
-                loading: () => const OccupancyRateWidgetLoading(),
-                error: (_, _) => const SizedBox.shrink(),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Overdue Rents Section (US2)
-              _buildOverdueSection(context, ref, overdueAsync, totalOverdueAsync),
-
-              const SizedBox(height: 24),
-
-              // Expiring Leases Section (US3)
-              _buildExpiringSection(context, ref, expiringAsync),
-
-              const SizedBox(height: 24),
-
-              // Quick actions (US5)
-              Text(
-                'Actions rapides',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 16),
-              _buildQuickActions(context, user),
-
-              const SizedBox(height: 24),
             ],
           ),
         ),

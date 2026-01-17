@@ -21,19 +21,19 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
       title: 'Gérez tous vos biens\nen un seul endroit',
       description:
           'Centralisez la gestion de vos biens immobiliers, locataires et documents en un seul endroit pratique.',
-      icon: Icons.dashboard_customize_rounded,
+      imagePath: 'assets/images/onboarding/manage_properties.png',
     ),
     OnboardingItem(
       title: 'Suivez vos loyers\net impayés en temps réel',
       description:
           'Gardez un œil sur les loyers payés et impayés grâce à des alertes et un tableau de bord simple.',
-      icon: Icons.pie_chart_rounded,
+      imagePath: 'assets/images/onboarding/track_rent.png',
     ),
     OnboardingItem(
       title: 'États des lieux et\nquittances 100% numériques',
       description:
           'Effectuez des états des lieux détaillés et générez des quittances en un clic.',
-      icon: Icons.document_scanner_rounded,
+      imagePath: 'assets/images/onboarding/digital_documents.png',
     ),
   ];
 
@@ -65,77 +65,106 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: _items.length,
-                onPageChanged: (index) {
-                  setState(() {
-                    _currentPage = index;
-                  });
-                },
-                itemBuilder: (context, index) {
-                  return OnboardingSlide(item: _items[index]);
-                },
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: RadialGradient(
+            center: Alignment.center,
+            radius: 1.2,
+            colors: [
+              Color(0xFFFAFBFC), // Blanc au centre
+              Color(0xFFE8F2FC), // Bleu très clair sur les bords
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: _items.length,
+                  onPageChanged: (index) {
+                    setState(() {
+                      _currentPage = index;
+                    });
+                  },
+                  itemBuilder: (context, index) {
+                    return OnboardingSlide(item: _items[index]);
+                  },
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-              child: Column(
-                children: [
-                  // Page Indicator
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                      _items.length,
-                      (index) => AnimatedContainer(
-                        duration: AppSpacing.durationFast,
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        height: 8,
-                        width: _currentPage == index ? 24 : 8,
-                        decoration: BoxDecoration(
-                          color: _currentPage == index
-                              ? AppColors.secondary
-                              : AppColors.primary.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(4),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 32),
+                child: Column(
+                  children: [
+                    // Page Indicator
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        _items.length,
+                        (index) => AnimatedContainer(
+                          duration: AppSpacing.durationFast,
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                          height: 8,
+                          width: _currentPage == index ? 24 : 8,
+                          decoration: BoxDecoration(
+                            color: _currentPage == index
+                                ? AppColors.primary
+                                : AppColors.primary.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 32),
-                  // Buttons
-                  SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: ElevatedButton(
-                      onPressed: _onNext,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.secondary,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                    const SizedBox(height: 32),
+                    // Button
+                    Container(
+                      width: double.infinity,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          colors: [
+                            Color(0xFFF5A623), // Orange doré
+                            Color(0xFFFFBF4D), // Orange clair
+                          ],
                         ),
-                        elevation: 2,
+                        borderRadius: BorderRadius.circular(28),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFFF5A623).withOpacity(0.4),
+                            blurRadius: 15,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
                       ),
-                      child: Text(
-                        _currentPage == _items.length - 1
-                            ? 'Commencer'
-                            : 'Suivant',
-                        style: AppTypography.labelLarge.copyWith(
-                          color: Colors.white,
-                          fontSize: 18,
+                      child: ElevatedButton(
+                        onPressed: _onNext,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(28),
+                          ),
+                        ),
+                        child: Text(
+                          _currentPage == _items.length - 1
+                              ? 'Commencer'
+                              : 'Suivant',
+                          style: AppTypography.labelLarge.copyWith(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -145,12 +174,12 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
 class OnboardingItem {
   final String title;
   final String description;
-  final IconData icon;
+  final String imagePath;
 
   OnboardingItem({
     required this.title,
     required this.description,
-    required this.icon,
+    required this.imagePath,
   });
 }
 
@@ -162,48 +191,42 @@ class OnboardingSlide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(24.0),
+      padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 24.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Graphic Placeholder
-           Container(
-            padding: const EdgeInsets.all(40),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(30),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.primary.withOpacity(0.08),
-                  blurRadius: 30,
-                  offset: const Offset(0, 10),
-                ),
-              ],
-            ),
-            child: Icon(
-              item.icon,
-              size: 100,
-              color: AppColors.primary,
-            ),
+          const Spacer(),
+          // 3D Illustration
+          Image.asset(
+            item.imagePath,
+            width: 280,
+            height: 280,
+            fit: BoxFit.contain,
           ),
-          const SizedBox(height: 48),
+          const SizedBox(height: 56),
+          // Title
           Text(
             item.title,
             style: AppTypography.headlineLarge.copyWith(
               color: AppColors.textPrimary,
-              height: 1.2,
+              height: 1.3,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
+          // Description
           Text(
             item.description,
             style: AppTypography.bodyLarge.copyWith(
               color: AppColors.textSecondary,
-              height: 1.5,
+              height: 1.6,
+              fontSize: 15,
             ),
             textAlign: TextAlign.center,
           ),
+          const Spacer(),
         ],
       ),
     );
