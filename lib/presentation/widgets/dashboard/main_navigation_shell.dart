@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -51,39 +52,117 @@ class MainNavigationShell extends ConsumerWidget {
           ),
         ),
       ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _getSelectedIndex(location),
-        onDestinationSelected: (index) => _navigateTo(context, index),
-        backgroundColor: Colors.white.withOpacity(0.9),
-        elevation: 2,
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.dashboard_outlined),
-            selectedIcon: Icon(Icons.dashboard),
-            label: 'Accueil',
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.8),
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 20,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
-          NavigationDestination(
-            icon: Icon(Icons.home_work_outlined),
-            selectedIcon: Icon(Icons.home_work),
-            label: 'Immeubles',
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(30),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _buildNavItem(
+                      context,
+                      index: 0,
+                      currentIndex: _getSelectedIndex(location),
+                      icon: Icons.dashboard_outlined,
+                      activeIcon: Icons.dashboard,
+                      label: 'Accueil',
+                    ),
+                    _buildNavItem(
+                      context,
+                      index: 1,
+                      currentIndex: _getSelectedIndex(location),
+                      icon: Icons.home_work_outlined,
+                      activeIcon: Icons.home_work,
+                      label: 'Immeubles',
+                    ),
+                    _buildNavItem(
+                      context,
+                      index: 2,
+                      currentIndex: _getSelectedIndex(location),
+                      icon: Icons.people_outline,
+                      activeIcon: Icons.people,
+                      label: 'Locataires',
+                    ),
+                    _buildNavItem(
+                      context,
+                      index: 3,
+                      currentIndex: _getSelectedIndex(location),
+                      icon: Icons.description_outlined,
+                      activeIcon: Icons.description,
+                      label: 'Baux',
+                    ),
+                    _buildNavItem(
+                      context,
+                      index: 4,
+                      currentIndex: _getSelectedIndex(location),
+                      icon: Icons.payments_outlined,
+                      activeIcon: Icons.payments,
+                      label: 'Paiements',
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
-          NavigationDestination(
-            icon: Icon(Icons.people_outline),
-            selectedIcon: Icon(Icons.people),
-            label: 'Locataires',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.description_outlined),
-            selectedIcon: Icon(Icons.description),
-            label: 'Baux',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.payments_outlined),
-            selectedIcon: Icon(Icons.payments),
-            label: 'Paiements',
-          ),
-        ],
+        ),
       ),
+    );
+  }
+
+  Widget _buildNavItem(
+    BuildContext context, {
+    required int index,
+    required int currentIndex,
+    required IconData icon,
+    required IconData activeIcon,
+    required String label,
+  }) {
+    final isSelected = index == currentIndex;
+    const activeColor = Color(0xFF2196F3); // Blue from the image approximation
+    const inactiveColor = Colors.grey;
+
+    return InkWell(
+      onTap: () => _navigateTo(context, index),
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              isSelected ? activeIcon : icon,
+              color: isSelected ? activeColor : inactiveColor,
+              size: 26,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? activeColor : inactiveColor,
+                fontSize: 12,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+              ),
+            ),
+          ],
+        ),
+      ),
+
     );
   }
 
