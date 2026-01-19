@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../domain/entities/user.dart';
 
@@ -74,7 +73,11 @@ class DashboardAppBar extends StatelessWidget {
                     height: 32,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
-                      return Icon(Icons.home, color: AppColors.primary, size: 32);
+                      return Icon(
+                        Icons.home,
+                        color: AppColors.primary,
+                        size: 32,
+                      );
                     },
                   ),
                 ),
@@ -82,7 +85,8 @@ class DashboardAppBar extends StatelessWidget {
                 const Text(
                   'LocaGest',
                   style: TextStyle(
-                    fontFamily: 'Outfit', // Assuming font family, otherwise default
+                    fontFamily:
+                        'Outfit', // Assuming font family, otherwise default
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: AppColors.textPrimary,

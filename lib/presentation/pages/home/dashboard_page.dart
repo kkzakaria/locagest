@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/router/app_router.dart';
-import '../../../core/theme/app_colors.dart';
 import '../../../domain/entities/user.dart';
 import '../../../domain/entities/overdue_rent.dart';
 import '../../../domain/entities/expiring_lease.dart';
@@ -13,7 +12,6 @@ import '../../widgets/dashboard/kpi_grid_section.dart';
 import '../../widgets/dashboard/overdue_rents_section.dart';
 import '../../widgets/dashboard/expiring_leases_section.dart';
 import '../../widgets/dashboard/occupancy_rate_widget.dart';
-import '../../widgets/dashboard/dashboard_app_bar.dart';
 
 /// Main dashboard page after login
 /// Displays KPIs, overdue rents, expiring leases, and quick actions
@@ -40,7 +38,12 @@ class DashboardPage extends ConsumerWidget {
       },
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.fromLTRB(16, 0, 16, 80), // Add bottom padding for FAB/Nav
+        padding: const EdgeInsets.fromLTRB(
+          16,
+          0,
+          16,
+          80,
+        ), // Add bottom padding for FAB/Nav
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -48,16 +51,16 @@ class DashboardPage extends ConsumerWidget {
             // Welcome message
             Text(
               'Bonjour, ${user?.fullName ?? 'Utilisateur'}!',
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(
               'Bienvenue sur votre tableau de bord',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Colors.grey[600],
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 24),
 
@@ -80,8 +83,7 @@ class DashboardPage extends ConsumerWidget {
             const SizedBox(height: 24),
 
             // Overdue Rents Section (US2)
-            _buildOverdueSection(
-                context, ref, overdueAsync, totalOverdueAsync),
+            _buildOverdueSection(context, ref, overdueAsync, totalOverdueAsync),
 
             const SizedBox(height: 24),
 
@@ -93,10 +95,9 @@ class DashboardPage extends ConsumerWidget {
             // Quick actions (US5)
             Text(
               'Actions rapides',
-              style:
-                  Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             _buildQuickActions(context, user),
@@ -189,61 +190,69 @@ class DashboardPage extends ConsumerWidget {
 
     // Building management (gestionnaire and admin)
     if (user?.canManageBuildings ?? false) {
-      actions.add(_buildActionCard(
-        context,
-        icon: Icons.add_home_work,
-        label: 'Ajouter un immeuble',
-        onTap: () => context.push(AppRoutes.buildingNew),
-      ));
+      actions.add(
+        _buildActionCard(
+          context,
+          icon: Icons.add_home_work,
+          label: 'Ajouter un immeuble',
+          onTap: () => context.push(AppRoutes.buildingNew),
+        ),
+      );
     }
 
     // View buildings (all users)
-    actions.add(_buildActionCard(
-      context,
-      icon: Icons.home_work,
-      label: 'Voir les immeubles',
-      onTap: () => context.push(AppRoutes.buildings),
-    ));
+    actions.add(
+      _buildActionCard(
+        context,
+        icon: Icons.home_work,
+        label: 'Voir les immeubles',
+        onTap: () => context.push(AppRoutes.buildings),
+      ),
+    );
 
     // View tenants (all users)
-    actions.add(_buildActionCard(
-      context,
-      icon: Icons.people,
-      label: 'Voir les locataires',
-      onTap: () => context.push(AppRoutes.tenants),
-    ));
+    actions.add(
+      _buildActionCard(
+        context,
+        icon: Icons.people,
+        label: 'Voir les locataires',
+        onTap: () => context.push(AppRoutes.tenants),
+      ),
+    );
 
     // View leases (all users)
-    actions.add(_buildActionCard(
-      context,
-      icon: Icons.description,
-      label: 'Voir les baux',
-      onTap: () => context.push(AppRoutes.leases),
-    ));
+    actions.add(
+      _buildActionCard(
+        context,
+        icon: Icons.description,
+        label: 'Voir les baux',
+        onTap: () => context.push(AppRoutes.leases),
+      ),
+    );
 
     // View payments (all users)
-    actions.add(_buildActionCard(
-      context,
-      icon: Icons.payments,
-      label: 'Paiements',
-      onTap: () => context.push(AppRoutes.payments),
-    ));
+    actions.add(
+      _buildActionCard(
+        context,
+        icon: Icons.payments,
+        label: 'Paiements',
+        onTap: () => context.push(AppRoutes.payments),
+      ),
+    );
 
     // User management (admin only)
     if (user?.canManageUsers ?? false) {
-      actions.add(_buildActionCard(
-        context,
-        icon: Icons.manage_accounts,
-        label: 'Gerer les utilisateurs',
-        onTap: () => context.go(AppRoutes.userManagement),
-      ));
+      actions.add(
+        _buildActionCard(
+          context,
+          icon: Icons.manage_accounts,
+          label: 'Gerer les utilisateurs',
+          onTap: () => context.go(AppRoutes.userManagement),
+        ),
+      );
     }
 
-    return Wrap(
-      spacing: 16,
-      runSpacing: 16,
-      children: actions,
-    );
+    return Wrap(spacing: 16, runSpacing: 16, children: actions);
   }
 
   Widget _buildActionCard(
@@ -277,5 +286,4 @@ class DashboardPage extends ConsumerWidget {
       ),
     );
   }
-
 }
