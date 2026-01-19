@@ -67,13 +67,11 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: RadialGradient(
-            center: Alignment.center,
-            radius: 1.2,
-            colors: [
-              Color(0xFFFAFBFC), // Blanc au centre
-              Color(0xFFE8F2FC), // Bleu très clair sur les bords
-            ],
+          image: DecorationImage(
+            image: AssetImage(
+              'assets/images/backgrounds/secondary_background.png',
+            ),
+            fit: BoxFit.cover,
           ),
         ),
         child: SafeArea(
@@ -94,7 +92,10 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 32),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 32,
+                ),
                 child: Column(
                   children: [
                     // Page Indicator
