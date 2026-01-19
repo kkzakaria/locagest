@@ -11,13 +11,11 @@ class SplashPage extends StatelessWidget {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF7EC8F5), // Bleu ciel clair
-              Color(0xFF4DA3E0), // Bleu moyen
-            ],
+          image: DecorationImage(
+            image: AssetImage(
+              'assets/images/backgrounds/primary_background.png',
+            ),
+            fit: BoxFit.cover,
           ),
         ),
         child: SafeArea(
